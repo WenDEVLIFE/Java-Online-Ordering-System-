@@ -84,7 +84,7 @@ public class LoginFrame extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnNewButton.setBounds(234, 391, 198, 49);
+		btnNewButton.setBounds(213, 390, 262, 49);
 		contentPane.add(btnNewButton);
 		
 		JButton btnSignUp = new JButton("Sign Up");
@@ -96,7 +96,7 @@ public class LoginFrame extends JFrame {
 			}
 		});
 		btnSignUp.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnSignUp.setBounds(234, 469, 198, 49);
+		btnSignUp.setBounds(213, 468, 262, 49);
 		contentPane.add(btnSignUp);
 
 	}

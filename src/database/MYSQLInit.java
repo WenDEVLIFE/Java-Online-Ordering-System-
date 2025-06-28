@@ -19,7 +19,7 @@ public class MYSQLInit {
 		return instance;
 	}
 	
-	public Connection getConnection() {
+	public static Connection getConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			return DriverManager.getConnection("jdbc:mysql://localhost:3306/ordering_db", "root", "");
@@ -31,7 +31,7 @@ public class MYSQLInit {
 	
 	public static void main(String[] args) {
 		MYSQLInit dbInit = MYSQLInit.getInstance();
-		Connection connection = dbInit.getConnection();
+		Connection connection = MYSQLInit.getConnection();
 		if (connection != null) {
 			System.out.println("Database connection established successfully.");
 		} else {
