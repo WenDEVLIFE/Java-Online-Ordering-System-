@@ -6,8 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import database.LoginDatabase;
+
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -81,6 +86,19 @@ public class LoginFrame extends JFrame {
 		JButton btnNewButton = new JButton("Sign In");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String username = textField.getText();
+				String password = new String(passwordField.getPassword());
+				
+				if (username.isEmpty() || password.isEmpty()) {
+					// Show error message if fields are empty
+					System.out.println("Please fill in both fields.");
+					JOptionPane.showMessageDialog(contentPane, "Please fill in both fields.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				} 
+				
+				LoginDatabase.getInstance().Login(username, password, LoginFrame.this);
+				
+				
 			}
 		});
 		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 15));
