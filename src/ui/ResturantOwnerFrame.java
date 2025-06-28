@@ -4,9 +4,10 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-public class SignUpForm extends JFrame {
+public class ResturantOwnerFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -18,7 +19,8 @@ public class SignUpForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SignUpForm frame = new SignUpForm();
+					UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarculaLaf());
+					ResturantOwnerFrame frame = new ResturantOwnerFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,7 +32,9 @@ public class SignUpForm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SignUpForm() {
+	public ResturantOwnerFrame() {
+		setResizable(false);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

@@ -7,7 +7,7 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding="src/" kind="src" path=""/>
-	<classpathentry kind="lib" path="C:/Users/Frouen Junior/eclipse-workspace/Online_Food_Ordering_System/flatlaf-3.6.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Frouen Junior/eclipse-workspace/Online_Food_Ordering_System/mysql-connector-j-9.2.0.jar"/>
+	<classpathentry kind="lib" path="D:/eclipseProject/Online_Food_Ordering_System/flatlaf-3.6.jar"/>
+	<classpathentry kind="lib" path="D:/eclipseProject/Online_Food_Ordering_System/mysql-connector-j-9.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
