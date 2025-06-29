@@ -72,4 +72,49 @@ public class RiderService {
 		}
 		return riders;
 	}
+
+	public String getRiderNameById(String driverNamed) {
+		String sql = "SELECT rider_name FROM rider WHERE rider_name = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, driverNamed);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getString("rider_name");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String getRiderPhoneById(String driverNamed) {
+		String sql = "SELECT rider_phone_number FROM rider WHERE rider_name = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, driverNamed);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getString("rider_phone_number");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public int getRiderIdByName(String driverName) {
+		String sql = "SELECT rider_id FROM rider WHERE rider_name = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, driverName);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("rider_id");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1; // Return -1 if not found
+	}
 }

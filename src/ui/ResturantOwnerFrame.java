@@ -698,7 +698,7 @@ public class ResturantOwnerFrame extends JFrame {
 		 menuList = MenuService.getInstance().getAllMenuItems();
 		 
 		 for (MenuItemModel menu : menuList) {
-			 Object[] row = {menu.getMenuItemId(), menu.getMenuItemName(), menu.getMenuprice(), menu.getCategorName()};
+			 Object[] row = {menu.getMenuItemId(), menu.getMenuItemName(), "P" + menu.getMenuprice(), menu.getCategorName()};
 			 menuTableModel.addRow(row);
 		 }
 		 

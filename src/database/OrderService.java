@@ -156,6 +156,46 @@ public class OrderService {
 		}
 	}
 
+	public boolean setOrderAsReceived(String orderId, int rating, String feedback, String riderId, String userId) {
+		String sql = "UPDATE orders_items SET status = 'Received' WHERE order_id = ?";
+		String insertReviewSql = "INSERT INTO riderlogs (user_id, rate, date, feedback, rider_id) VALUES (?, ?, ?, ?, ?)";
+		Connection conn = null;
+		try {
+			conn = MYSQLInit.getConnection();
+			conn.setAutoCommit(false);
+
+			try (PreparedStatement updateStmt = conn.prepareStatement(sql);
+				 PreparedStatement insertStmt = conn.prepareStatement(insertReviewSql)) {
+
+				// Update order status
+				updateStmt.setString(1, orderId);
+				int orderRows = updateStmt.executeUpdate();
+
+				// Insert review
+				insertStmt.setString(1, userId);
+				insertStmt.setInt(2, rating);
+				insertStmt.setString(3, java.time.LocalDate.now().toString()); // Use current date
+				insertStmt.setString(4, feedback);
+				insertStmt.setString(5, riderId); // Replace with actual rider ID if available
+				int reviewRows = insertStmt.executeUpdate();
+
+				if (orderRows > 0 && reviewRows > 0) {
+					conn.commit();
+					return true;
+				} else {
+					conn.rollback();
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+			e.printStackTrace();
+			return false;
+		} finally {
+			if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+	}
+
 
 	
 

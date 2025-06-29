@@ -14,10 +14,12 @@ import database.OrderService;
 import dialog.ChangePasswordDialog;
 import dialog.MyProfileDialog;
 import dialog.PaymentDialog;
+import dialog.ReviewDialog;
 import dialog.SelectItemDialog;
 import model.MenuItemModel;
 import model.OrderModel;
 import model.PaymentModel;
+import model.RiderModel;
 
 import javax.swing.JTabbedPane;
 import java.awt.Color;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.awt.event.ActionEvent;
 
+
 public class CustomerFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -46,7 +49,7 @@ public class CustomerFrame extends JFrame {
 	int userId;
 	private JTextField orderField;
 	private JTable orderTable;
-	private JTextField textField_2;
+	private JTextField searchPaymentField;
 	private JTable paymentHistoryTable;
 	private JTextField searchMenuField;
 	private JTable menuTable;
@@ -213,6 +216,7 @@ public class CustomerFrame extends JFrame {
 				int selectedRow = orderTable.getSelectedRow();
 				if (selectedRow == -1) {
 					JOptionPane.showMessageDialog(CustomerFrame.this, "Please select an order to set as received.", "No Selection", JOptionPane.WARNING_MESSAGE);
+					
 					return;
 				}
 				
@@ -220,6 +224,25 @@ public class CustomerFrame extends JFrame {
 				if (!"In-Delivery".equals(selectedOrder.getOrderStatus())) {
 					JOptionPane.showMessageDialog(CustomerFrame.this, "You can only set confirmed orders as received.", "Invalid Order Status", JOptionPane.WARNING_MESSAGE);
 					return;
+				}
+				
+				ReviewDialog reviewDialog = new ReviewDialog(CustomerFrame.this, userId, selectedOrder.getRiderName());
+				reviewDialog.setVisible(true);
+				
+				if (reviewDialog.getRating() > 0) {
+					String feedback = reviewDialog.getFeedback();
+					int rating = reviewDialog.getRating();
+					int riderId = reviewDialog.getRiderId();
+					
+					boolean isReceived = OrderService.getInstance().setOrderAsReceived(selectedOrder.getOrderId(), rating, feedback , String.valueOf(riderId) , String.valueOf(userId));
+					if (isReceived) {
+						JOptionPane.showMessageDialog(CustomerFrame.this, "Order set as received successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+						LoadOrderTable(); // Reload order table to reflect changes
+					} else {
+						JOptionPane.showMessageDialog(CustomerFrame.this, "Failed to set order as received. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "No rating provided. Please provide a rating to set the order as received.", "No Rating Provided", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -252,10 +275,10 @@ public class CustomerFrame extends JFrame {
 		lblSearch_1_1.setBounds(317, 24, 128, 45);
 		paymentpane.add(lblSearch_1_1);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(455, 32, 665, 36);
-		paymentpane.add(textField_2);
+		searchPaymentField = new JTextField();
+		searchPaymentField.setColumns(10);
+		searchPaymentField.setBounds(455, 32, 665, 36);
+		paymentpane.add(searchPaymentField);
 		
 		paymentHistoryTable = new JTable();
 		paymentHistoryTable.setBounds(76, 80, 1044, 380);
@@ -447,6 +470,33 @@ public class CustomerFrame extends JFrame {
 		});
 		
 		
+		TableRowSorter<DefaultTableModel> paymentHistorySorter = new TableRowSorter<>(paymentHistoryTableModel);
+		paymentHistoryTable.setRowSorter(paymentHistorySorter);
+		
+		searchPaymentField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = searchPaymentField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadPaymentHistoryTable(); 
+					
+				} else {
+					paymentHistorySorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
+
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+		
+		
 
 		LoadMenuTable();
 		LoadProfile();
@@ -467,7 +517,7 @@ public class CustomerFrame extends JFrame {
 		 menuList = MenuService.getInstance().getAllMenuItems();
 		 
 		 for (MenuItemModel menu : menuList) {
-			 Object[] row = {menu.getMenuItemId(), menu.getMenuItemName(), menu.getMenuprice(), menu.getCategorName()};
+			 Object[] row = {menu.getMenuItemId(), menu.getMenuItemName(), "P" + menu.getMenuprice(), menu.getCategorName()};
 			 menuTableModel.addRow(row);
 		 }
 		 
@@ -483,7 +533,7 @@ public class CustomerFrame extends JFrame {
 		 
 		 for (OrderModel order : orderList) {
 		
-			 Object[] row = {order.getOrderId(), order.getCustomerName(), order.getMenuPrice(), order.getTotalAmount(), order.getQuantity(), order.getOrderStatus(), order.getRiderName()};
+			 Object[] row = {order.getOrderId(), order.getCustomerName(), "P" + order.getMenuPrice(), order.getTotalAmount(), order.getQuantity(), order.getOrderStatus(), order.getRiderName()};
 			 orderTableModel.addRow(row);
 		 }
 		
@@ -495,7 +545,7 @@ public class CustomerFrame extends JFrame {
 		   paymentHistoryList = OrderService.getInstance().getPaymentHistoryByUserId(userId);
 		 
 		 for (PaymentModel order : paymentHistoryList) {
-			 Object[] row = {order.getPaymentId(), order.getMenuName(), order.getMenuPrice(), order.getPaymentMethod(), order.getStatus()};
+			 Object[] row = {order.getPaymentId(), order.getMenuName(),  "P" + order.getMenuPrice(), order.getPaymentMethod(), order.getStatus()};
 			 paymentHistoryTableModel.addRow(row);
 		 }
 	 }
