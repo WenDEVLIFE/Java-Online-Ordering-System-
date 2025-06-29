@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import database.AccountService;
 import database.CategoryService;
 import database.MenuService;
 import database.RiderService;
@@ -35,6 +36,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class ResturantOwnerFrame extends JFrame {
 
@@ -61,6 +63,8 @@ public class ResturantOwnerFrame extends JFrame {
 	List<OrderModel> orderList = new java.util.ArrayList<>();
 	List<RiderModel> riderList = new java.util.ArrayList<>();
 	private int userId;
+	private JPasswordField newPasswordField;
+	private JPasswordField oldPaswordField;
 
 	/**
 	 * Launch the application.
@@ -540,6 +544,66 @@ public class ResturantOwnerFrame extends JFrame {
 		orderTable.setModel(orderTableModel);
 		riderTableModel = new DefaultTableModel(riderColumnNames, 0);
 		riderTable.setModel(riderTableModel);
+		
+		JPanel updatePanel = new JPanel();
+		updatePanel.setLayout(null);
+		updatePanel.setBackground(new Color(255, 128, 64));
+		tabbedPane.addTab("Change Password", null, updatePanel, null);
+		
+		JLabel lblUpdatePassword = new JLabel("Update Password");
+		lblUpdatePassword.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblUpdatePassword.setBounds(82, 22, 217, 45);
+		updatePanel.add(lblUpdatePassword);
+		
+		JLabel lblOldPassword = new JLabel("Old Password");
+		lblOldPassword.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblOldPassword.setBounds(134, 129, 150, 45);
+		updatePanel.add(lblOldPassword);
+		
+		JLabel lblNewPassword = new JLabel("New Password");
+		lblNewPassword.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblNewPassword.setBounds(134, 214, 150, 45);
+		updatePanel.add(lblNewPassword);
+		
+		newPasswordField = new JPasswordField();
+		newPasswordField.setBounds(322, 216, 389, 43);
+		updatePanel.add(newPasswordField);
+		
+		oldPaswordField = new JPasswordField();
+		oldPaswordField.setBounds(322, 129, 389, 43);
+		updatePanel.add(oldPaswordField);
+		
+		JButton btnChangePassword = new JButton("Change Password");
+		btnChangePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String oldPassword = new String(oldPaswordField.getPassword()).trim();
+				String newPassword = new String(newPasswordField.getPassword()).trim();
+				
+				if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Old Password and New Password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				AccountService accountService = AccountService.getInstance();
+				boolean isPasswordChanged = accountService.updatePassword(userId, oldPassword, newPassword);
+				
+				if (isPasswordChanged) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Password updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					oldPaswordField.setText("");
+					newPasswordField.setText("");
+				} else {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Failed to update password. Please check your old password.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnChangePassword.setBounds(367, 346, 262, 49);
+		updatePanel.add(btnChangePassword);
+		
+		JButton btnLogout_3 = new JButton("Logout");
+		btnLogout_3.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_3.setBounds(1079, 485, 90, 36);
+		updatePanel.add(btnLogout_3);
 		LoadCategoryTable();
 		 loadDashboard();
 		 LoadRiderTable();
