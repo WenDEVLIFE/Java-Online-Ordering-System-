@@ -36,5 +36,9 @@ public class RiderModel {
 	}
 		
 		
+    @Override
+    public String toString() {
+        return riderName;
+    }
 
 }

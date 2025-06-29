@@ -13,6 +13,7 @@ import database.MyProfileService;
 import database.OrderService;
 import dialog.ChangePasswordDialog;
 import dialog.MyProfileDialog;
+import dialog.PaymentDialog;
 import dialog.SelectItemDialog;
 import model.MenuItemModel;
 import model.OrderModel;
@@ -168,11 +169,58 @@ public class CustomerFrame extends JFrame {
 		orderpane.add(orderTable);
 		
 		JButton btnConfirmOrder = new JButton("Confirm Order");
+		btnConfirmOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = orderTable.getSelectedRow();
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "Please select an order to confirm.", "No Selection", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				OrderModel selectedOrder = orderList.get(selectedRow);
+				if (!"Pending".equals(selectedOrder.getOrderStatus())) {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "You can only confirm pending orders.", "Invalid Order Status", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				PaymentDialog paymentDialog = new PaymentDialog(CustomerFrame.this, selectedOrder);
+				paymentDialog.setVisible(true);
+				 if (paymentDialog.getSelectedRiderId() != null) {
+					String selectedRiderId = paymentDialog.getSelectedRiderId();
+					String paymentMethod = paymentDialog.getPaymentMethod();
+					boolean isConfirmed = OrderService.getInstance().confirmOrder(selectedOrder.getOrderId(), selectedRiderId, paymentMethod, userId);
+					if (isConfirmed) {
+						JOptionPane.showMessageDialog(CustomerFrame.this, "Order confirmed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+						LoadOrderTable(); // Reload order table to reflect changes
+					} else {
+						JOptionPane.showMessageDialog(CustomerFrame.this, "Failed to confirm order. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "No rider selected. Please select a rider to confirm the order.", "No Rider Selected", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 		btnConfirmOrder.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnConfirmOrder.setBounds(217, 467, 262, 49);
 		orderpane.add(btnConfirmOrder);
 		
 		JButton btnSetAsReceive = new JButton("Set as receive order");
+		btnSetAsReceive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int selectedRow = orderTable.getSelectedRow();
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "Please select an order to set as received.", "No Selection", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				OrderModel selectedOrder = orderList.get(selectedRow);
+				if (!"In-Delivery".equals(selectedOrder.getOrderStatus())) {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "You can only set confirmed orders as received.", "Invalid Order Status", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+			}
+		});
 		btnSetAsReceive.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnSetAsReceive.setBounds(724, 467, 262, 49);
 		orderpane.add(btnSetAsReceive);

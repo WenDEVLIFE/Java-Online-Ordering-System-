@@ -85,6 +85,47 @@ public class OrderService {
 	    }
 	}
 
+	public boolean confirmOrder(String orderId, String selectedRiderId, String paymentMethod, int userId) {
+	    String updateOrderSql = "UPDATE orders_items SET status = 'Confirmed' WHERE order_id = ?";
+	    String insertPaymentSql = "INSERT INTO payments (order_id, payment_method, status, user_id, rider_id) VALUES (?, ?, ?, ?, ?)";
+	    Connection conn = null;
+	    try {
+	        conn = MYSQLInit.getConnection();
+	        conn.setAutoCommit(false);
+
+	        try (PreparedStatement updateStmt = conn.prepareStatement(updateOrderSql);
+	             PreparedStatement insertStmt = conn.prepareStatement(insertPaymentSql)) {
+
+	            // Update order
+	            updateStmt.setString(1, orderId);
+	            int orderRows = updateStmt.executeUpdate();
+
+	            // Insert payment
+	            insertStmt.setString(1, orderId);
+	            insertStmt.setString(2, paymentMethod);
+	            insertStmt.setString(3, "Paid"); // or "Pending" as needed
+	            insertStmt.setInt(4, userId);
+	            insertStmt.setString(5, selectedRiderId);
+	            int paymentRows = insertStmt.executeUpdate();
+
+	            if (orderRows > 0 && paymentRows > 0) {
+	                conn.commit();
+	                return true;
+	            } else {
+	                conn.rollback();
+	                return false;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+	    }
+	}
+
+
 	
 
 
