@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 import database.AccountService;
 import database.LogService;
+import database.StatisticService;
 import dialog.AddUser;
 import dialog.EditUser;
 import model.LogModel;
@@ -38,6 +39,10 @@ public class AdminFrame extends JFrame {
 	private JTable table_1;
 	private JPasswordField newPasswordField;
 	private JPasswordField oldPasswordField;
+	private JLabel adminCount;
+	private JLabel restaurantCount;
+	private JLabel customerCount;
+	private JLabel logCount;
 	DefaultTableModel accountTableModel, LogTableModel;
 	List<UserModel> accountList = new ArrayList<>();
 	List<LogModel> logList = new ArrayList<>();
@@ -97,10 +102,10 @@ public class AdminFrame extends JFrame {
 		lblNewLabel.setBounds(79, 45, 128, 45);
 		panel.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("0");
-		lblNewLabel_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1.setBounds(127, 101, 128, 45);
-		panel.add(lblNewLabel_1);
+		adminCount = new JLabel("0");
+		adminCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		adminCount.setBounds(127, 101, 128, 45);
+		panel.add(adminCount);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
@@ -112,10 +117,10 @@ public class AdminFrame extends JFrame {
 		lblRestaurantAdmin.setBounds(79, 45, 187, 45);
 		panel_1.add(lblRestaurantAdmin);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("0");
-		lblNewLabel_1_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1.setBounds(127, 101, 128, 45);
-		panel_1.add(lblNewLabel_1_1);
+		restaurantCount = new JLabel("0");
+		restaurantCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		restaurantCount.setBounds(127, 101, 128, 45);
+		panel_1.add(restaurantCount);
 		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setLayout(null);
@@ -127,10 +132,10 @@ public class AdminFrame extends JFrame {
 		lblCustomerAccount.setBounds(79, 45, 187, 45);
 		panel_1_1.add(lblCustomerAccount);
 		
-		JLabel lblNewLabel_1_1_1 = new JLabel("0");
-		lblNewLabel_1_1_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_1.setBounds(127, 101, 128, 45);
-		panel_1_1.add(lblNewLabel_1_1_1);
+		customerCount = new JLabel("0");
+		customerCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		customerCount.setBounds(127, 101, 128, 45);
+		panel_1_1.add(customerCount);
 		
 		JPanel panel_1_2 = new JPanel();
 		panel_1_2.setLayout(null);
@@ -142,10 +147,10 @@ public class AdminFrame extends JFrame {
 		lblLogs.setBounds(114, 45, 88, 45);
 		panel_1_2.add(lblLogs);
 		
-		JLabel lblNewLabel_1_1_2 = new JLabel("0");
-		lblNewLabel_1_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_2.setBounds(136, 101, 128, 45);
-		panel_1_2.add(lblNewLabel_1_1_2);
+	    logCount = new JLabel("0");
+		logCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		logCount.setBounds(136, 101, 128, 45);
+		panel_1_2.add(logCount);
 		
 		JPanel accoountpanel = new JPanel();
 		accoountpanel.setBackground(new Color(255, 128, 64));
@@ -200,6 +205,7 @@ public class AdminFrame extends JFrame {
 					JOptionPane.showMessageDialog(AdminFrame.this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 					refreshAccountTable();
 					refreshLogTable();
+					 updateDashboardCounts();
 				}
 			}
 		});
@@ -225,6 +231,7 @@ public class AdminFrame extends JFrame {
 					JOptionPane.showMessageDialog(AdminFrame.this, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 					refreshAccountTable();
 					refreshLogTable();
+					 updateDashboardCounts();
 				}
 				
 			}
@@ -312,6 +319,7 @@ public class AdminFrame extends JFrame {
 		
 		refreshAccountTable();
 		refreshLogTable();
+		updateDashboardCounts();
 		
 
 	}
@@ -350,5 +358,17 @@ public class AdminFrame extends JFrame {
 	
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public void updateDashboardCounts() {
+		int adminCountValue = StatisticService.getInstance().getAdminCount();
+		int restaurantAdminCountValue = StatisticService.getInstance().getRestaurantAdminCount();
+		int customerCountValue = StatisticService.getInstance().getCustomerCount();
+		int logCountValue = StatisticService.getInstance().getLogCount();
+		
+		adminCount.setText(String.valueOf(adminCountValue));
+		restaurantCount.setText(String.valueOf(restaurantAdminCountValue));
+		customerCount.setText(String.valueOf(customerCountValue));
+		logCount.setText(String.valueOf(logCountValue));
 	}
 }
