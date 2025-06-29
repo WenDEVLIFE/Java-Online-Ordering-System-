@@ -7,12 +7,15 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import database.CategoryService;
+import database.MenuService;
 import database.RiderService;
 import database.StatisticService;
 import dialog.AddCategory;
 import dialog.AddCategoryDialog;
+import dialog.AddMenuDialog;
 import dialog.AddRider;
 import model.CategoryModel;
 import model.MenuItemModel;
@@ -25,6 +28,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -38,7 +42,7 @@ public class ResturantOwnerFrame extends JFrame {
 	private JTextField textField;
 	private JTable categoryTable;
 	private JTable menuTable;
-	private JTextField textField_1;
+	private JTextField searchMenuField;
 	private JTable orderTable;
 	private JTextField textField_2;
 	private JTable riderTable;
@@ -298,14 +302,27 @@ public class ResturantOwnerFrame extends JFrame {
 		menupane.add(menuTable);
 		
 		JButton btnAddMenu = new JButton("Add Menu");
+		btnAddMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddMenuDialog addMenuDialog = new AddMenuDialog(ResturantOwnerFrame.this);
+				addMenuDialog.setVisible(true);
+				if (addMenuDialog.isAdded()) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Menu item added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					loadDashboard();
+					LoadMenuTable();
+				} else {
+				
+				}
+			}
+		});
 		btnAddMenu.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnAddMenu.setBounds(148, 467, 262, 49);
 		menupane.add(btnAddMenu);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(439, 28, 665, 36);
-		menupane.add(textField_1);
+		searchMenuField = new JTextField();
+		searchMenuField.setColumns(10);
+		searchMenuField.setBounds(439, 28, 665, 36);
+		menupane.add(searchMenuField);
 		
 		JLabel lblSearch_1_1 = new JLabel("Search");
 		lblSearch_1_1.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -318,6 +335,28 @@ public class ResturantOwnerFrame extends JFrame {
 		menupane.add(btnEditMenu);
 		
 		JButton btnDeleteMenu = new JButton("Delete Menu");
+		btnDeleteMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = menuTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Please select a menu item to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				MenuItemModel selectedMenu = menuList.get(selectedRow);
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to delete the menu item: " + selectedMenu.getMenuName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					boolean isDeleted = MenuService.getInstance().deleteMenuItem(selectedMenu.getMenuItemId());
+					if (isDeleted) {
+						LoadMenuTable();
+						JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Menu item deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Failed to delete menu item. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 		btnDeleteMenu.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnDeleteMenu.setBounds(727, 467, 262, 49);
 		menupane.add(btnDeleteMenu);
@@ -447,6 +486,33 @@ public class ResturantOwnerFrame extends JFrame {
 		categoryTable.setModel(categoryTableModel);
 		menuTableModel = new DefaultTableModel(menuColumnNames, 0);
 		menuTable.setModel(menuTableModel);
+		
+		TableRowSorter<DefaultTableModel> menuSorter = new TableRowSorter<>(menuTableModel);
+		menuTable.setRowSorter(menuSorter);
+		
+		searchMenuField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = searchMenuField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadMenuTable(); 
+					
+				} else {
+					menuSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
+
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+		
 		orderTableModel = new DefaultTableModel(orderColumnNames, 0);
 		orderTable.setModel(orderTableModel);
 		riderTableModel = new DefaultTableModel(riderColumnNames, 0);
@@ -454,6 +520,7 @@ public class ResturantOwnerFrame extends JFrame {
 		LoadCategoryTable();
 		 loadDashboard();
 		 LoadRiderTable();
+		 LoadMenuTable();
 	}
 
 	public void setUserId(int userId) {
@@ -508,5 +575,20 @@ public class ResturantOwnerFrame extends JFrame {
 		}
 	}
 		
+
+	 public void LoadMenuTable() {
+		 menuList.clear();
+		 
+		 menuTableModel.setRowCount(0);
+		 
+		 menuList = MenuService.getInstance().getAllMenuItems();
+		 
+		 for (MenuItemModel menu : menuList) {
+			 Object[] row = {menu.getMenuItemId(), menu.getMenuItemName(), menu.getMenuprice(), menu.getCategorName()};
+			 menuTableModel.addRow(row);
+		 }
+		 
+		
+	 }
 
 }
