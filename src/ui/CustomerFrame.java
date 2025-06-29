@@ -10,10 +10,12 @@ import javax.swing.table.TableRowSorter;
 
 import database.MenuService;
 import database.MyProfileService;
+import database.OrderService;
 import dialog.ChangePasswordDialog;
 import dialog.MyProfileDialog;
 import dialog.SelectItemDialog;
 import model.MenuItemModel;
+import model.OrderModel;
 
 import javax.swing.JTabbedPane;
 import java.awt.Color;
@@ -52,6 +54,7 @@ public class CustomerFrame extends JFrame {
 	private JLabel contactNumText;
 	DefaultTableModel menuTableModel, orderTableModel, paymentHistoryTableModel;
 	List<MenuItemModel> menuList = new java.util.ArrayList<>();
+	List<OrderModel> orderList = new java.util.ArrayList<>();
 	
 	
 
@@ -328,8 +331,11 @@ public class CustomerFrame extends JFrame {
 		
 		
 		String [] menuColumnNames = {"Menu ID", "Menu Name", "Price", "CategoryName"};
+		String [] orderColumnNames = {"Order ID","Menu Name", "Menu Price", "Total Amount", "Quantity", "Order Status", "Rider Name"};
 		menuTableModel = new DefaultTableModel(menuColumnNames, 0);
+		orderTableModel = new DefaultTableModel(orderColumnNames, 0);
 		menuTable.setModel(menuTableModel);
+		orderTable.setModel(orderTableModel);
 		
 		TableRowSorter<DefaultTableModel> menuSorter = new TableRowSorter<>(menuTableModel);
 		menuTable.setRowSorter(menuSorter);
@@ -359,6 +365,7 @@ public class CustomerFrame extends JFrame {
 
 		LoadMenuTable();
 		LoadProfile();
+		LoadOrderTable();
 	}
 
 	public void setUserId(int userId) {
@@ -378,6 +385,21 @@ public class CustomerFrame extends JFrame {
 			 menuTableModel.addRow(row);
 		 }
 		 
+		
+	 }
+	 
+	 public void LoadOrderTable() {
+		 orderList.clear();
+		 
+		 orderTableModel.setRowCount(0);
+		 
+		 orderList = OrderService.getInstance().getOrdersByUserId(userId);
+		 
+		 for (OrderModel order : orderList) {
+		
+			 Object[] row = {order.getOrderId(), order.getCustomerName(), order.getMenuPrice(), order.getTotalAmount(), order.getQuantity(), order.getOrderStatus(), order.getRiderName()};
+			 orderTableModel.addRow(row);
+		 }
 		
 	 }
 	 

@@ -60,7 +60,8 @@ public class LoginDatabase {
 					CustomerFrame customerFrame = new CustomerFrame();
 					customerFrame.setVisible(true);
 					customerFrame.setUserId(userId); // Assuming you have a method to set user ID
-					customerFrame.LoadProfile(); // Load user profile data
+					customerFrame.LoadProfile(); // Load user profile data\
+				     customerFrame.LoadOrderTable(); // Load menu items
 					login.dispose(); // Close the login frame
 			
 				}
