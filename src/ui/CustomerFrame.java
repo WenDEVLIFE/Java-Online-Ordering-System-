@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import database.MenuService;
+import database.MyProfileService;
 import model.MenuItemModel;
 
 import javax.swing.JTabbedPane;
@@ -29,6 +30,10 @@ public class CustomerFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private String fullName;
+	private String email;
+	private String address;
+	private String contactNumber;
 	int userId;
 	private JTextField searchMenuField;
 	private JTable orderTable;
@@ -36,6 +41,10 @@ public class CustomerFrame extends JFrame {
 	private JTable paymentHistoryTable;
 	private JTextField textField;
 	private JTable menuTable;
+	private JLabel fullNameText;
+	private JLabel emailText;
+	private JLabel DeliveryAddress;
+	private JLabel contactNumText;
 	DefaultTableModel menuTableModel, orderTableModel, paymentHistoryTableModel;
 	List<MenuItemModel> menuList = new java.util.ArrayList<>();
 	
@@ -203,6 +212,10 @@ public class CustomerFrame extends JFrame {
 		profilepane.add(lblMyProfile);
 		
 		JButton btnAddToOrder = new JButton("Update Profile");
+		btnAddToOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnAddToOrder.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnAddToOrder.setBounds(197, 423, 262, 49);
 		profilepane.add(btnAddToOrder);
@@ -212,40 +225,40 @@ public class CustomerFrame extends JFrame {
 		lblFullName.setBounds(100, 106, 128, 45);
 		profilepane.add(lblFullName);
 		
-		JLabel lblJohnDoe = new JLabel("John Doe");
-		lblJohnDoe.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblJohnDoe.setBounds(100, 180, 262, 45);
-		profilepane.add(lblJohnDoe);
+		fullNameText = new JLabel("John Doe");
+		fullNameText.setFont(new Font("SansSerif", Font.BOLD, 20));
+		fullNameText.setBounds(100, 180, 262, 45);
+		profilepane.add(fullNameText);
 		
 		JLabel lblEmail = new JLabel("Email:");
 		lblEmail.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblEmail.setBounds(100, 254, 128, 45);
 		profilepane.add(lblEmail);
 		
-		JLabel lblTestgmailcom = new JLabel("test@gmail.com");
-		lblTestgmailcom.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblTestgmailcom.setBounds(100, 310, 262, 45);
-		profilepane.add(lblTestgmailcom);
+		emailText = new JLabel("test@gmail.com");
+		emailText.setFont(new Font("SansSerif", Font.BOLD, 20));
+		emailText.setBounds(100, 310, 262, 45);
+		profilepane.add(emailText);
 		
 		JLabel lblDeliveryAddress = new JLabel("Delivery Address");
 		lblDeliveryAddress.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblDeliveryAddress.setBounds(396, 106, 391, 45);
 		profilepane.add(lblDeliveryAddress);
 		
-		JLabel lblDavaoCity = new JLabel("Davao City");
-		lblDavaoCity.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblDavaoCity.setBounds(396, 180, 262, 45);
-		profilepane.add(lblDavaoCity);
+		DeliveryAddress = new JLabel("Davao City");
+		DeliveryAddress.setFont(new Font("SansSerif", Font.BOLD, 20));
+		DeliveryAddress.setBounds(396, 180, 262, 45);
+		profilepane.add(DeliveryAddress);
 		
 		JLabel lblContactNumber_1 = new JLabel("Contact Number");
 		lblContactNumber_1.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblContactNumber_1.setBounds(396, 254, 391, 45);
 		profilepane.add(lblContactNumber_1);
 		
-		JLabel lblContactNumber = new JLabel("09912094870");
-		lblContactNumber.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblContactNumber.setBounds(396, 310, 262, 45);
-		profilepane.add(lblContactNumber);
+		contactNumText = new JLabel("09912094870");
+		contactNumText.setFont(new Font("SansSerif", Font.BOLD, 20));
+		contactNumText.setBounds(396, 310, 262, 45);
+		profilepane.add(contactNumText);
 		
 		JButton btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
@@ -299,6 +312,7 @@ public class CustomerFrame extends JFrame {
 		});
 
 		LoadMenuTable();
+		LoadProfile();
 	}
 
 	public void setUserId(int userId) {
@@ -319,6 +333,21 @@ public class CustomerFrame extends JFrame {
 		 }
 		 
 		
+	 }
+	 
+	 public void LoadProfile() {
+		 
+		 this.fullName =  MyProfileService.getInstance().getFullName(userId);
+		 this.email = MyProfileService.getInstance().getEmail(userId);
+		 this.address = MyProfileService.getInstance().getAddress(userId);
+		 this.contactNumber = MyProfileService.getInstance().getContactNumber(userId);
+		 
+		 fullNameText.setText(fullName != null ? fullName : "N/A");
+		 emailText.setText(email != null ? email : "N/A");
+		 DeliveryAddress.setText(address != null ? address : "N/A");
+		 contactNumText.setText(contactNumber != null ? contactNumber : "N/A");
+		
+		 
 	 }
 
 

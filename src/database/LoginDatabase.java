@@ -60,6 +60,7 @@ public class LoginDatabase {
 					CustomerFrame customerFrame = new CustomerFrame();
 					customerFrame.setVisible(true);
 					customerFrame.setUserId(userId); // Assuming you have a method to set user ID
+					customerFrame.LoadProfile(); // Load user profile data
 					login.dispose(); // Close the login frame
 			
 				}
