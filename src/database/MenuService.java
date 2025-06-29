@@ -59,8 +59,7 @@ public class MenuService {
 						categoryName = categoryRs.getString("category_name");
 					}
 
-				
-					
+			
 					MenuItemModel menuItem = new MenuItemModel(menuId, menuName, price, categoryName);
 					menuItems.add(menuItem);
 				} catch (SQLException e) {
@@ -83,5 +82,24 @@ public class MenuService {
 		return rows > 0;
 	} catch (SQLException e) {
 		e.printStackTrace();
+		return false;
+	}
+	}
+
+	public boolean updateMenuItem(String menuItemId, String menuName, int price, String selectedCategoryId) {
+		String sql = "UPDATE menu_items SET menu_name = ?, price = ?, category_id = ? WHERE menu_id = ?";
+	try (Connection conn = MYSQLInit.getConnection();
+		 PreparedStatement stmt = conn.prepareStatement(sql)) {
+		stmt.setString(1, menuName);
+		stmt.setInt(2, price);
+		stmt.setString(3, selectedCategoryId);
+		stmt.setString(4, menuItemId);
+		int rows = stmt.executeUpdate();
+		return rows > 0;
+	} catch (SQLException e) {
+		e.printStackTrace();
+		return false;
+	}
+	
 	}
 }

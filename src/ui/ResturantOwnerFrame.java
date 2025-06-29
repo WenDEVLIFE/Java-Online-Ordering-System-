@@ -17,6 +17,7 @@ import dialog.AddCategory;
 import dialog.AddCategoryDialog;
 import dialog.AddMenuDialog;
 import dialog.AddRider;
+import dialog.EditMenuDialog;
 import model.CategoryModel;
 import model.MenuItemModel;
 import model.OrderModel;
@@ -330,6 +331,28 @@ public class ResturantOwnerFrame extends JFrame {
 		menupane.add(lblSearch_1_1);
 		
 		JButton btnEditMenu = new JButton("Edit Menu");
+		btnEditMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int selectedRow = menuTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Please select a menu item to edit.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				MenuItemModel selectedMenu = menuList.get(selectedRow);
+				EditMenuDialog editMenuDialog = new EditMenuDialog(ResturantOwnerFrame.this, selectedMenu);
+				editMenuDialog.setVisible(true);
+				if (editMenuDialog.isUpdated()) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Menu item updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					loadDashboard();
+					LoadMenuTable();
+				} else {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Failed to update menu item. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnEditMenu.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnEditMenu.setBounds(439, 467, 262, 49);
 		menupane.add(btnEditMenu);
@@ -345,7 +368,7 @@ public class ResturantOwnerFrame extends JFrame {
 				}
 				
 				MenuItemModel selectedMenu = menuList.get(selectedRow);
-				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to delete the menu item: " + selectedMenu.getMenuName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to delete the menu item: " + selectedMenu.getMenuItemName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 				if (confirm == JOptionPane.YES_OPTION) {
 					boolean isDeleted = MenuService.getInstance().deleteMenuItem(selectedMenu.getMenuItemId());
 					if (isDeleted) {
