@@ -41,6 +41,8 @@ public class AdminFrame extends JFrame {
 	DefaultTableModel accountTableModel, LogTableModel;
 	List<UserModel> accountList = new ArrayList<>();
 	List<LogModel> logList = new ArrayList<>();
+	
+	private int userId;
 
 	/**
 	 * Launch the application.
@@ -274,6 +276,29 @@ public class AdminFrame extends JFrame {
 		updatePanel.add(oldPasswordField);
 		
 		JButton btnChangePassword = new JButton("Change Password");
+		btnChangePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String oldPassword = new String(oldPasswordField.getPassword()).trim();
+				String newPassword = new String(newPasswordField.getPassword()).trim();
+				
+				if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+					JOptionPane.showMessageDialog(AdminFrame.this, "Old Password and New Password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				AccountService accountService = AccountService.getInstance();
+				boolean isPasswordChanged = accountService.updatePassword(userId, oldPassword, newPassword);
+				
+				if (isPasswordChanged) {
+					JOptionPane.showMessageDialog(AdminFrame.this, "Password updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					oldPasswordField.setText("");
+					newPasswordField.setText("");
+				} else {
+					JOptionPane.showMessageDialog(AdminFrame.this, "Failed to update password. Please check your old password.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnChangePassword.setBounds(367, 346, 262, 49);
 		updatePanel.add(btnChangePassword);
@@ -321,5 +346,9 @@ public class AdminFrame extends JFrame {
 				log.getTimestamp(),
 			});
 		}
+	}
+	
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 }

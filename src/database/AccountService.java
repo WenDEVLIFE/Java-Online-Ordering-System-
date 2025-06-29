@@ -152,5 +152,22 @@ public class AccountService {
 		}
 		
 	}
+
+	public boolean updatePassword(int userId, String oldPassword, String newPassword) {
+		String sql = "UPDATE users SET password = ? WHERE user_id = ? AND password = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, newPassword);
+			pstmt.setInt(2, userId);
+			pstmt.setString(3, oldPassword);
+			
+			LogService.getInstance().addLog("Password updated for user ID: " + userId);
+			
+			return pstmt.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 }
