@@ -79,4 +79,22 @@ public class MyProfileService {
 		}
 		return null;
 	}
+
+	public static boolean updateProfile(String userId, String fullName1, String email1, String contact1,
+			String address1) {
+		String sql = "UPDATE customer_profile SET fullname = ?, email = ?, contact_number = ?, delivery_address = ? WHERE user_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, fullName1);
+			stmt.setString(2, email1);
+			stmt.setString(3, contact1);
+			stmt.setString(4, address1);
+			stmt.setString(5, userId);
+			int rows = stmt.executeUpdate();
+			return rows > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

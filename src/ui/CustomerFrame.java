@@ -10,6 +10,7 @@ import javax.swing.table.TableRowSorter;
 
 import database.MenuService;
 import database.MyProfileService;
+import dialog.MyProfileDialog;
 import model.MenuItemModel;
 
 import javax.swing.JTabbedPane;
@@ -23,7 +24,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 
 public class CustomerFrame extends JFrame {
@@ -214,6 +217,20 @@ public class CustomerFrame extends JFrame {
 		JButton btnAddToOrder = new JButton("Update Profile");
 		btnAddToOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Map <String, String> userProfile = new HashMap<>();
+				userProfile.put("fullName", fullNameText.getText());
+				userProfile.put("email", emailText.getText());
+				userProfile.put("contact", contactNumText.getText());
+				userProfile.put("address", DeliveryAddress.getText());
+				userProfile.put("userId", String.valueOf(userId));
+				
+				
+				MyProfileDialog myProfileDialog = new MyProfileDialog(CustomerFrame.this, userProfile);
+				myProfileDialog.setVisible(true);
+				if (myProfileDialog.isSaved()) {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "Profile updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					LoadProfile(); 
+				}
 			}
 		});
 		btnAddToOrder.setFont(new Font("SansSerif", Font.BOLD, 15));
