@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import model.UserModel;
 
 public class AccountService {
 
@@ -59,6 +63,7 @@ public class AccountService {
 	            profileStmt.setString(5, userDetails.get("deliveryAddress"));
 	            profileStmt.executeUpdate();
 
+	            LogService.getInstance().addLog("New user registered: " + userDetails.get("username"));
 	            conn.commit();
 	            return true;
 	        } else {
@@ -76,7 +81,43 @@ public class AccountService {
 	        try { if (conn != null) conn.close(); } catch (Exception e) {}
 	    }
 	}
-
 	
+	public boolean InsertAccount(String username, String password, String role) {
+		String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			pstmt.setString(3, role);
+	
+			LogService.getInstance().addLog("New user registered: " + username);
+			
+			return pstmt.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			return false;
+		}
+	}
+
+	public List<UserModel> getAllUsers() {
+		List<UserModel> users = new ArrayList<>();
+		String sql = "SELECT * FROM users";
+		try (Connection conn = MYSQLInit.getConnection();
+			 Statement stmt = conn.createStatement();
+			 ResultSet rs = stmt.executeQuery(sql)) {
+			while (rs.next()) {
+				String userId = rs.getString("user_id");
+				String username = rs.getString("username");
+				String password = rs.getString("password");
+				String role = rs.getString("role");
+				UserModel user = new UserModel(userId, username, password, role);
+				users.add(user);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return users;
+	}
 	
 }

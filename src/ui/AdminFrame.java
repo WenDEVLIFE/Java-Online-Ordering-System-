@@ -6,24 +6,40 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import database.AccountService;
+import database.LogService;
+import dialog.AddUser;
+import model.LogModel;
+import model.UserModel;
+
 import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class AdminFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
+	private JTable AccountTable;
 	private JTextField textField;
 	private JTable table_1;
 	private JPasswordField newPasswordField;
 	private JPasswordField oldPasswordField;
+	DefaultTableModel accountTableModel, LogTableModel;
+	List<UserModel> accountList = new ArrayList<>();
+	List<LogModel> logList = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -65,7 +81,7 @@ public class AdminFrame extends JFrame {
 		JPanel dashboardPanel = new JPanel();
 		dashboardPanel.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Dashboard", null, dashboardPanel, null);
-		tabbedPane.setBackgroundAt(0, new Color(255, 128, 64));
+		tabbedPane.setBackgroundAt(0, new Color(255, 255, 255));
 		dashboardPanel.setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -133,9 +149,9 @@ public class AdminFrame extends JFrame {
 		tabbedPane.addTab("Account Management", null, accoountpanel, null);
 		accoountpanel.setLayout(null);
 		
-		table = new JTable();
-		table.setBounds(66, 84, 1044, 380);
-		accoountpanel.add(table);
+		AccountTable = new JTable();
+		AccountTable.setBounds(66, 84, 1044, 380);
+		accoountpanel.add(AccountTable);
 		
 		textField = new JTextField();
 		textField.setBounds(445, 36, 665, 36);
@@ -148,6 +164,17 @@ public class AdminFrame extends JFrame {
 		accoountpanel.add(lblSearch);
 		
 		JButton btnAddAccount = new JButton("Add Account");
+		btnAddAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddUser addUserDialog = new AddUser(AdminFrame.this);
+				addUserDialog.setVisible(true);
+				if (addUserDialog.isUserAdded()) {
+					JOptionPane.showMessageDialog(AdminFrame.this, "User added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					refreshAccountTable();
+					refreshLogTable();
+				}
+			}
+		});
 		btnAddAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnAddAccount.setBounds(111, 475, 262, 49);
 		accoountpanel.add(btnAddAccount);
@@ -208,6 +235,49 @@ public class AdminFrame extends JFrame {
 		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnChangePassword.setBounds(367, 346, 262, 49);
 		updatePanel.add(btnChangePassword);
+		
+		String [] columnNames = {"Username", "Role"};
+		String [] logColumnNames = {"Log ID", "Description", "Timestamp"};
+		accountTableModel = new DefaultTableModel(columnNames, 0);
+		LogTableModel = new DefaultTableModel(logColumnNames, 0);
+		AccountTable.setModel(accountTableModel);
+		table_1.setModel(LogTableModel);
+		
+		refreshAccountTable();
+		refreshLogTable();
+		
 
+	}
+	
+	public void refreshAccountTable() {
+		accountTableModel.setRowCount(0);
+
+		accountList.clear();
+		
+		accountList = AccountService.getInstance().getAllUsers();
+		
+		for (UserModel user : accountList) {
+			accountTableModel.addRow(new Object[] {
+				user.getUserName(),
+				user.getRole(),
+			});
+		}
+	}
+	
+	
+	public void refreshLogTable() {
+		LogTableModel.setRowCount(0);
+		
+		logList.clear();
+		
+		logList = LogService.getInstance().getAllLogs();
+		
+		for (LogModel log : logList) {
+			LogTableModel.addRow(new Object[] {
+				log.getLogId(),
+				log.getDescription(),
+				log.getTimestamp(),
+			});
+		}
 	}
 }
