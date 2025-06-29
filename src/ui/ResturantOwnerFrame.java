@@ -10,9 +10,12 @@ import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ResturantOwnerFrame extends JFrame {
 
@@ -158,6 +161,22 @@ public class ResturantOwnerFrame extends JFrame {
 		lblNewLabel_1_1_1_1_1_1.setBounds(127, 101, 128, 45);
 		panel_1_1_1_1_1.add(lblNewLabel_1_1_1_1_1_1);
 		
+		JButton btnLogout_1_4 = new JButton("Logout");
+		btnLogout_1_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_4.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_4.setBounds(1079, 480, 90, 36);
+		dashboardPanel.add(btnLogout_1_4);
+		
 		JPanel categorypane = new JPanel();
 		categorypane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Category", null, categorypane, null);
@@ -187,6 +206,22 @@ public class ResturantOwnerFrame extends JFrame {
 		btnDeleteCategory.setBounds(636, 467, 262, 49);
 		categorypane.add(btnDeleteCategory);
 		
+		JButton btnLogout_1_1 = new JButton("Logout");
+		btnLogout_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_1.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_1.setBounds(1079, 482, 90, 36);
+		categorypane.add(btnLogout_1_1);
+		
 		JPanel menupane = new JPanel();
 		menupane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Menu", null, menupane, null);
@@ -213,13 +248,28 @@ public class ResturantOwnerFrame extends JFrame {
 		
 		JButton btnEditMenu = new JButton("Edit Menu");
 		btnEditMenu.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnEditMenu.setBounds(475, 467, 262, 49);
+		btnEditMenu.setBounds(439, 467, 262, 49);
 		menupane.add(btnEditMenu);
 		
 		JButton btnDeleteMenu = new JButton("Delete Menu");
 		btnDeleteMenu.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnDeleteMenu.setBounds(803, 467, 262, 49);
+		btnDeleteMenu.setBounds(727, 467, 262, 49);
 		menupane.add(btnDeleteMenu);
+		
+		JButton btnLogout_1_2 = new JButton("Logout");
+		btnLogout_1_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_2.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_2.setBounds(1075, 482, 90, 36);
+		menupane.add(btnLogout_1_2);
 		
 		JPanel orderpane = new JPanel();
 		orderpane.setBackground(new Color(255, 128, 64));
@@ -250,6 +300,21 @@ public class ResturantOwnerFrame extends JFrame {
 		btnSetAsIn.setBounds(597, 458, 262, 49);
 		orderpane.add(btnSetAsIn);
 		
+		JButton btnLogout_1_3 = new JButton("Logout");
+		btnLogout_1_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_3.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_3.setBounds(1079, 480, 90, 36);
+		orderpane.add(btnLogout_1_3);
+		
 		JPanel riderpane = new JPanel();
 		riderpane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Rider", null, riderpane, null);
@@ -278,6 +343,21 @@ public class ResturantOwnerFrame extends JFrame {
 		btnUpdateRider.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnUpdateRider.setBounds(646, 467, 262, 49);
 		riderpane.add(btnUpdateRider);
+		
+		JButton btnLogout_1 = new JButton("Logout");
+		btnLogout_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1.setBounds(1079, 482, 90, 36);
+		riderpane.add(btnLogout_1);
 
 	}
 

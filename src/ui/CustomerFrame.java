@@ -10,8 +10,11 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CustomerFrame extends JFrame {
 
@@ -82,6 +85,21 @@ public class CustomerFrame extends JFrame {
 		btnSelectItem.setBounds(405, 467, 262, 49);
 		menupane.add(btnSelectItem);
 		
+		JButton btnLogout_1_4 = new JButton("Logout");
+		btnLogout_1_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(CustomerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_4.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_4.setBounds(1079, 482, 90, 36);
+		menupane.add(btnLogout_1_4);
+		
 		JPanel orderpane = new JPanel();
 		orderpane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Order", null, orderpane, null);
@@ -111,6 +129,21 @@ public class CustomerFrame extends JFrame {
 		btnSetAsReceive.setBounds(724, 467, 262, 49);
 		orderpane.add(btnSetAsReceive);
 		
+		JButton btnLogout_1_4_1 = new JButton("Logout");
+		btnLogout_1_4_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(CustomerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_4_1.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_4_1.setBounds(1079, 482, 90, 36);
+		orderpane.add(btnLogout_1_4_1);
+		
 		JPanel paymentpane = new JPanel();
 		paymentpane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Payment History", null, paymentpane, null);
@@ -118,17 +151,32 @@ public class CustomerFrame extends JFrame {
 		
 		JLabel lblSearch_1_1 = new JLabel("Search");
 		lblSearch_1_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblSearch_1_1.setBounds(318, 39, 128, 45);
+		lblSearch_1_1.setBounds(317, 24, 128, 45);
 		paymentpane.add(lblSearch_1_1);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(456, 47, 665, 36);
+		textField_2.setBounds(455, 32, 665, 36);
 		paymentpane.add(textField_2);
 		
 		table_2 = new JTable();
-		table_2.setBounds(77, 95, 1044, 380);
+		table_2.setBounds(76, 80, 1044, 380);
 		paymentpane.add(table_2);
+		
+		JButton btnLogout_1_4_2 = new JButton("Logout");
+		btnLogout_1_4_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(CustomerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_4_2.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_4_2.setBounds(1079, 480, 90, 36);
+		paymentpane.add(btnLogout_1_4_2);
 		
 		JPanel profilepane = new JPanel();
 		profilepane.setBackground(new Color(255, 128, 64));
@@ -189,6 +237,21 @@ public class CustomerFrame extends JFrame {
 		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnChangePassword.setBounds(596, 423, 262, 49);
 		profilepane.add(btnChangePassword);
+		
+		JButton btnLogout_1_4_3 = new JButton("Logout");
+		btnLogout_1_4_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(CustomerFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1_4_3.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1_4_3.setBounds(1079, 480, 90, 36);
+		profilepane.add(btnLogout_1_4_3);
 
 	}
 
