@@ -12,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 import database.AccountService;
 import database.CategoryService;
 import database.MenuService;
+import database.OrderService;
 import database.RiderService;
 import database.StatisticService;
 import dialog.AddCategory;
@@ -47,9 +48,9 @@ public class ResturantOwnerFrame extends JFrame {
 	private JTable menuTable;
 	private JTextField searchMenuField;
 	private JTable orderTable;
-	private JTextField textField_2;
+	private JTextField searchOrderField;
 	private JTable riderTable;
-	private JTextField textField_3;
+	private JTextField searchRiderField;
 	private JLabel riderCount;
 	private JLabel categoryCount;
 	private JLabel menuCount;
@@ -413,24 +414,45 @@ public class ResturantOwnerFrame extends JFrame {
 		orderTable.setBounds(71, 67, 1044, 380);
 		orderpane.add(orderTable);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(450, 19, 665, 36);
-		orderpane.add(textField_2);
+		searchOrderField = new JTextField();
+		searchOrderField.setColumns(10);
+		searchOrderField.setBounds(450, 19, 665, 36);
+		orderpane.add(searchOrderField);
 		
 		JLabel lblSearch_1_1_1 = new JLabel("Search");
 		lblSearch_1_1_1.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblSearch_1_1_1.setBounds(312, 11, 128, 45);
 		orderpane.add(lblSearch_1_1_1);
 		
-		JButton btnSetAsDelivered = new JButton("Set as in progress");
-		btnSetAsDelivered.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnSetAsDelivered.setBounds(296, 458, 262, 49);
-		orderpane.add(btnSetAsDelivered);
-		
 		JButton btnSetAsIn = new JButton("Set as in delivery");
+		btnSetAsIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int selectedRow = orderTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Please select an order to set as in delivery.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				OrderModel selectedOrder = orderList.get(selectedRow);
+				String riderName = JOptionPane.showInputDialog(ResturantOwnerFrame.this, "Enter Rider Name for Order ID: " + selectedOrder.getOrderId());
+				
+				if (riderName != null && !riderName.trim().isEmpty()) {
+					boolean isUpdated = OrderService.getInstance().setOrderInDelivery(selectedOrder.getOrderId());
+					if (isUpdated) {
+						LoadAllOrdersTable();
+						JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Order set as in delivery successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Failed to set order as in delivery. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Rider name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnSetAsIn.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnSetAsIn.setBounds(597, 458, 262, 49);
+		btnSetAsIn.setBounds(450, 458, 262, 49);
 		orderpane.add(btnSetAsIn);
 		
 		JButton btnLogout_1_3 = new JButton("Logout");
@@ -458,10 +480,10 @@ public class ResturantOwnerFrame extends JFrame {
 		riderTable.setBounds(60, 76, 1044, 380);
 		riderpane.add(riderTable);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(439, 28, 665, 36);
-		riderpane.add(textField_3);
+		searchRiderField = new JTextField();
+		searchRiderField.setColumns(10);
+		searchRiderField.setBounds(439, 28, 665, 36);
+		riderpane.add(searchRiderField);
 		
 		JLabel lblSearch_1_2 = new JLabel("Search");
 		lblSearch_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -569,8 +591,63 @@ public class ResturantOwnerFrame extends JFrame {
 		
 		orderTableModel = new DefaultTableModel(orderColumnNames, 0);
 		orderTable.setModel(orderTableModel);
+		
+		
+		TableRowSorter<DefaultTableModel> orderSorter = new TableRowSorter<>(orderTableModel);
+		orderTable.setRowSorter(orderSorter);
+		
+		searchOrderField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = searchOrderField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadAllOrdersTable(); 
+					
+				} else {
+					orderSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
+
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+		
+		
 		riderTableModel = new DefaultTableModel(riderColumnNames, 0);
 		riderTable.setModel(riderTableModel);
+		
+		TableRowSorter<DefaultTableModel> riderSorter = new TableRowSorter<>(riderTableModel);
+		riderTable.setRowSorter(riderSorter);
+		
+		searchRiderField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = searchRiderField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadRiderTable(); 
+					
+				} else {
+					riderSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
+
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
 		
 		JPanel updatePanel = new JPanel();
 		updatePanel.setLayout(null);
@@ -689,6 +766,19 @@ public class ResturantOwnerFrame extends JFrame {
 		}
 	}
 		
+	public void LoadAllOrdersTable() {
+		
+		 orderList.clear();
+		 
+		 orderTableModel.setRowCount(0);
+		 
+		 orderList = OrderService.getInstance().getAllOrders();
+		 
+		 for (OrderModel order : orderList) {
+			 Object[] row = {order.getOrderId(), order.getCustomerName(), order.getMenuName(), "P" + order.getMenuPrice(), "P" + order.getTotalAmount(), order.getQuantity(), order.getOrderStatus(), order.getRiderName()};
+			 orderTableModel.addRow(row);
+		 }
+	}
 
 	 public void LoadMenuTable() {
 		 menuList.clear();
