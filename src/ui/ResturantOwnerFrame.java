@@ -86,6 +86,7 @@ public class ResturantOwnerFrame extends JFrame {
 		JPanel dashboardPanel = new JPanel();
 		dashboardPanel.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Dashboard", null, dashboardPanel, null);
+		tabbedPane.setForegroundAt(0, new Color(0, 0, 0));
 		dashboardPanel.setLayout(null);
 		
 		JPanel panel_2 = new JPanel();
@@ -197,6 +198,7 @@ public class ResturantOwnerFrame extends JFrame {
 		JPanel categorypane = new JPanel();
 		categorypane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Category", null, categorypane, null);
+		tabbedPane.setForegroundAt(1, new Color(0, 0, 0));
 		categorypane.setLayout(null);
 		
 		textField = new JTextField();
@@ -255,6 +257,7 @@ public class ResturantOwnerFrame extends JFrame {
 		JPanel menupane = new JPanel();
 		menupane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Menu", null, menupane, null);
+		tabbedPane.setForegroundAt(2, new Color(0, 0, 0));
 		menupane.setLayout(null);
 		
 		menuTable = new JTable();
@@ -304,6 +307,7 @@ public class ResturantOwnerFrame extends JFrame {
 		JPanel orderpane = new JPanel();
 		orderpane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Orders", null, orderpane, null);
+		tabbedPane.setForegroundAt(3, new Color(0, 0, 0));
 		orderpane.setLayout(null);
 		
 		orderTable = new JTable();
@@ -348,6 +352,7 @@ public class ResturantOwnerFrame extends JFrame {
 		JPanel riderpane = new JPanel();
 		riderpane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Rider", null, riderpane, null);
+		tabbedPane.setForegroundAt(4, new Color(0, 0, 0));
 		riderpane.setLayout(null);
 		
 		riderTable = new JTable();

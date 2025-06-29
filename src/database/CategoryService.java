@@ -56,4 +56,23 @@ public class CategoryService {
 		}
 		return categories;
 	}
+
+	public boolean deleteCategory(String categoryId) {
+		String sql = "DELETE FROM category WHERE category_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, categoryId);
+			int rowsAffected = stmt.executeUpdate();
+			
+			if (rowsAffected > 0) {
+				LogService.getInstance().addLog("Category deleted: " + categoryId);
+				return true;
+			} else {
+				return false; // No rows were deleted
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
