@@ -22,6 +22,8 @@ public class CustomerFrame extends JFrame {
 	private JTable table_1;
 	private JTextField textField_2;
 	private JTable table_2;
+	private JTextField textField;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -59,6 +61,26 @@ public class CustomerFrame extends JFrame {
 		JPanel menupane = new JPanel();
 		menupane.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Menu", null, menupane, null);
+		menupane.setLayout(null);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(444, 28, 665, 36);
+		menupane.add(textField);
+		
+		table = new JTable();
+		table.setBounds(65, 76, 1044, 380);
+		menupane.add(table);
+		
+		JLabel lblSearch_1_2 = new JLabel("Search");
+		lblSearch_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblSearch_1_2.setBounds(306, 20, 128, 45);
+		menupane.add(lblSearch_1_2);
+		
+		JButton btnSelectItem = new JButton("Select Item");
+		btnSelectItem.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnSelectItem.setBounds(405, 467, 262, 49);
+		menupane.add(btnSelectItem);
 		
 		JPanel orderpane = new JPanel();
 		orderpane.setBackground(new Color(255, 128, 64));
