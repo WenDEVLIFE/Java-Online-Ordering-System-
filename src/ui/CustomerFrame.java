@@ -17,6 +17,7 @@ import dialog.PaymentDialog;
 import dialog.SelectItemDialog;
 import model.MenuItemModel;
 import model.OrderModel;
+import model.PaymentModel;
 
 import javax.swing.JTabbedPane;
 import java.awt.Color;
@@ -43,11 +44,11 @@ public class CustomerFrame extends JFrame {
 	private String address;
 	private String contactNumber;
 	int userId;
-	private JTextField searchMenuField;
+	private JTextField orderField;
 	private JTable orderTable;
 	private JTextField textField_2;
 	private JTable paymentHistoryTable;
-	private JTextField textField;
+	private JTextField searchMenuField;
 	private JTable menuTable;
 	private JLabel fullNameText;
 	private JLabel emailText;
@@ -56,6 +57,7 @@ public class CustomerFrame extends JFrame {
 	DefaultTableModel menuTableModel, orderTableModel, paymentHistoryTableModel;
 	List<MenuItemModel> menuList = new java.util.ArrayList<>();
 	List<OrderModel> orderList = new java.util.ArrayList<>();
+	 List<PaymentModel> paymentHistoryList = new java.util.ArrayList<>();
 	
 	
 
@@ -98,10 +100,10 @@ public class CustomerFrame extends JFrame {
 		tabbedPane.addTab("Menu", null, menupane, null);
 		menupane.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(444, 28, 665, 36);
-		menupane.add(textField);
+		searchMenuField = new JTextField();
+		searchMenuField.setColumns(10);
+		searchMenuField.setBounds(444, 28, 665, 36);
+		menupane.add(searchMenuField);
 		
 		menuTable = new JTable();
 		menuTable.setBounds(65, 76, 1044, 380);
@@ -154,10 +156,10 @@ public class CustomerFrame extends JFrame {
 		tabbedPane.addTab("Order", null, orderpane, null);
 		orderpane.setLayout(null);
 		
-		searchMenuField = new JTextField();
-		searchMenuField.setColumns(10);
-		searchMenuField.setBounds(438, 28, 665, 36);
-		orderpane.add(searchMenuField);
+		orderField = new JTextField();
+		orderField.setColumns(10);
+		orderField.setBounds(438, 28, 665, 36);
+		orderpane.add(orderField);
 		
 		JLabel lblSearch_1 = new JLabel("Search");
 		lblSearch_1.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -380,10 +382,43 @@ public class CustomerFrame extends JFrame {
 		
 		String [] menuColumnNames = {"Menu ID", "Menu Name", "Price", "CategoryName"};
 		String [] orderColumnNames = {"Order ID","Menu Name", "Menu Price", "Total Amount", "Quantity", "Order Status", "Rider Name"};
+		String [] paymentHistoryColumnNames = {"Payment ID", "Menu Name", "Menu Price", "Payment Method", "Status",};
 		menuTableModel = new DefaultTableModel(menuColumnNames, 0);
 		orderTableModel = new DefaultTableModel(orderColumnNames, 0);
+		paymentHistoryTableModel = new DefaultTableModel(paymentHistoryColumnNames, 0);
+		
+		
+		TableRowSorter<DefaultTableModel> orderSorter = new TableRowSorter<>(orderTableModel);
+		orderTable.setRowSorter(orderSorter);
+		
+		orderField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = orderField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadOrderTable(); 
+					
+				} else {
+					orderSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
+
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+		
+		
+		
 		menuTable.setModel(menuTableModel);
 		orderTable.setModel(orderTableModel);
+		paymentHistoryTable.setModel(paymentHistoryTableModel);
 		
 		TableRowSorter<DefaultTableModel> menuSorter = new TableRowSorter<>(menuTableModel);
 		menuTable.setRowSorter(menuSorter);
@@ -391,7 +426,7 @@ public class CustomerFrame extends JFrame {
 		searchMenuField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 			@Override
 			public void insertUpdate(javax.swing.event.DocumentEvent e) {
-				String searchText = searchMenuField.getText().toLowerCase();
+				String searchText = orderField.getText().toLowerCase();
 				if (searchText.trim().isEmpty()) {
 					LoadMenuTable(); 
 					
@@ -410,10 +445,13 @@ public class CustomerFrame extends JFrame {
 				insertUpdate(e);
 			}
 		});
+		
+		
 
 		LoadMenuTable();
 		LoadProfile();
 		LoadOrderTable();
+		LoadPaymentHistoryTable();
 	}
 
 	public void setUserId(int userId) {
@@ -449,6 +487,17 @@ public class CustomerFrame extends JFrame {
 			 orderTableModel.addRow(row);
 		 }
 		
+	 }
+	 
+	  public void LoadPaymentHistoryTable() {
+		 paymentHistoryTableModel.setRowCount(0);
+		 
+		   paymentHistoryList = OrderService.getInstance().getPaymentHistoryByUserId(userId);
+		 
+		 for (PaymentModel order : paymentHistoryList) {
+			 Object[] row = {order.getPaymentId(), order.getMenuName(), order.getMenuPrice(), order.getPaymentMethod(), order.getStatus()};
+			 paymentHistoryTableModel.addRow(row);
+		 }
 	 }
 	 
 	 public void LoadProfile() {

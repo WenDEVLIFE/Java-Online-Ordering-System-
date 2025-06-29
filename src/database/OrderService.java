@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.OrderModel;
+import model.PaymentModel;
 
 public class OrderService {
 
@@ -123,6 +124,36 @@ public class OrderService {
 	    } finally {
 	        if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 	    }
+	}
+
+	public List<PaymentModel> getPaymentHistoryByUserId(int userId) {
+	 		String sql = "SELECT p.payment_id, m.menu_name, m.price AS menu_price, p.payment_method, p.status, cp.fullname " +
+				"FROM payments p " +
+				"JOIN orders_items oi ON p.order_id = oi.order_id " +
+				"JOIN menu_items m ON oi.menu_id = m.menu_id " +
+				"JOIN users u ON oi.user_id = u.user_id " +
+				"JOIN customer_profile cp ON u.user_id = cp.user_id " +
+				"WHERE u.user_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, userId);
+			ResultSet rs = stmt.executeQuery();
+			List<PaymentModel> payments = new ArrayList<>();
+			while (rs.next()) {
+				String paymentId = rs.getString("payment_id");
+				String menuName = rs.getString("menu_name");
+				String menuPrice = rs.getString("menu_price");
+				String paymentMethod = rs.getString("payment_method");
+				String status = rs.getString("status");
+				String customerName = rs.getString("fullname");
+				PaymentModel payment = new PaymentModel(paymentId, menuName, menuPrice, paymentMethod, status, customerName);
+				payments.add(payment);
+			}
+			return payments;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 

@@ -62,6 +62,7 @@ public class LoginDatabase {
 					customerFrame.setUserId(userId); // Assuming you have a method to set user ID
 					customerFrame.LoadProfile(); // Load user profile data\
 				     customerFrame.LoadOrderTable(); // Load menu items
+				     customerFrame.LoadPaymentHistoryTable(); // Load payment history
 					login.dispose(); // Close the login frame
 			
 				}
