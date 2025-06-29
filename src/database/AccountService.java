@@ -119,5 +119,38 @@ public class AccountService {
 		}
 		return users;
 	}
+
+	public boolean updateUser(String userId, String username, String password, String role) {
+		String sql = "UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			pstmt.setString(3, role);
+			pstmt.setString(4, userId);
+			
+			LogService.getInstance().addLog("User updated: " + username);
+			
+			return pstmt.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void deleteUser(String userId) {
+		String sql = "DELETE FROM users WHERE user_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, userId);
+			
+			LogService.getInstance().addLog("User deleted: " + userId);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 }

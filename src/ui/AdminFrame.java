@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import database.AccountService;
 import database.LogService;
 import dialog.AddUser;
+import dialog.EditUser;
 import model.LogModel;
 import model.UserModel;
 
@@ -180,11 +181,52 @@ public class AdminFrame extends JFrame {
 		accoountpanel.add(btnAddAccount);
 		
 		JButton btnEditAccount = new JButton("Edit Account");
+		btnEditAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int selectedRow = AccountTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(AdminFrame.this, "Please select an account to edit.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				UserModel selectedUser = accountList.get(selectedRow);
+				EditUser editUserDialog = new EditUser(AdminFrame.this, selectedUser);
+				editUserDialog.setVisible(true);
+				if (editUserDialog.isUserEdited()) {
+					JOptionPane.showMessageDialog(AdminFrame.this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					refreshAccountTable();
+					refreshLogTable();
+				}
+			}
+		});
 		btnEditAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnEditAccount.setBounds(430, 475, 262, 49);
 		accoountpanel.add(btnEditAccount);
 		
 		JButton btnDeleteAccount = new JButton("Delete Account");
+		btnDeleteAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int selectedRow = AccountTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(AdminFrame.this, "Please select an account to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				UserModel selectedUser = accountList.get(selectedRow);
+				int confirm = JOptionPane.showConfirmDialog(AdminFrame.this, "Are you sure you want to delete the account of " + selectedUser.getUserName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					AccountService.getInstance().deleteUser(selectedUser.getUserId());
+					JOptionPane.showMessageDialog(AdminFrame.this, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					refreshAccountTable();
+					refreshLogTable();
+				}
+				
+			}
+		});
 		btnDeleteAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnDeleteAccount.setBounds(734, 475, 262, 49);
 		accoountpanel.add(btnDeleteAccount);
