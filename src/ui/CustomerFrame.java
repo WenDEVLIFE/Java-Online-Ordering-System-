@@ -10,6 +10,7 @@ import javax.swing.table.TableRowSorter;
 
 import database.MenuService;
 import database.MyProfileService;
+import dialog.ChangePasswordDialog;
 import dialog.MyProfileDialog;
 import model.MenuItemModel;
 
@@ -278,6 +279,16 @@ public class CustomerFrame extends JFrame {
 		profilepane.add(contactNumText);
 		
 		JButton btnChangePassword = new JButton("Change Password");
+		btnChangePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog(CustomerFrame.this, userId);
+				changePasswordDialog.setVisible(true);
+				if (changePasswordDialog.isChanged()) {
+					JOptionPane.showMessageDialog(CustomerFrame.this, "Password updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					LoadProfile(); // Reload profile to reflect changes
+				}
+			}
+		});
 		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnChangePassword.setBounds(596, 423, 262, 49);
 		profilepane.add(btnChangePassword);
