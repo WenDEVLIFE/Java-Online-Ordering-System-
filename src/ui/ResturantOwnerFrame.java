@@ -42,7 +42,7 @@ public class ResturantOwnerFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField searchCategoryField;
 	private JTable categoryTable;
 	private JTable menuTable;
 	private JTextField searchMenuField;
@@ -220,10 +220,10 @@ public class ResturantOwnerFrame extends JFrame {
 		tabbedPane.setForegroundAt(1, new Color(0, 0, 0));
 		categorypane.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(447, 28, 665, 36);
-		categorypane.add(textField);
+		searchCategoryField = new JTextField();
+		searchCategoryField.setColumns(10);
+		searchCategoryField.setBounds(447, 28, 665, 36);
+		categorypane.add(searchCategoryField);
 		
 		categoryTable = new JTable();
 		categoryTable.setBounds(68, 76, 1044, 380);
@@ -511,6 +511,33 @@ public class ResturantOwnerFrame extends JFrame {
 		String [] riderColumnNames = {"Rider ID", "Rider Name", "Phone Number", "Status"};
 		categoryTableModel = new DefaultTableModel(categoryColumnNames, 0);
 		categoryTable.setModel(categoryTableModel);
+		
+		TableRowSorter<DefaultTableModel> categorySorter = new TableRowSorter<>(categoryTableModel);
+		categoryTable.setRowSorter(categorySorter);
+		
+		searchCategoryField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = searchCategoryField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadCategoryTable(); 
+					
+				} else {
+					categorySorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
+
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+		
 		menuTableModel = new DefaultTableModel(menuColumnNames, 0);
 		menuTable.setModel(menuTableModel);
 		

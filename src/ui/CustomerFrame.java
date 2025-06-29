@@ -5,15 +5,24 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
+import database.MenuService;
+import model.MenuItemModel;
+
 import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.UIManager;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class CustomerFrame extends JFrame {
@@ -21,12 +30,16 @@ public class CustomerFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	int userId;
-	private JTextField textField_1;
-	private JTable table_1;
+	private JTextField searchMenuField;
+	private JTable orderTable;
 	private JTextField textField_2;
-	private JTable table_2;
+	private JTable paymentHistoryTable;
 	private JTextField textField;
-	private JTable table;
+	private JTable menuTable;
+	DefaultTableModel menuTableModel, orderTableModel, paymentHistoryTableModel;
+	List<MenuItemModel> menuList = new java.util.ArrayList<>();
+	
+	
 
 	/**
 	 * Launch the application.
@@ -35,6 +48,7 @@ public class CustomerFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarculaLaf());
 					CustomerFrame frame = new CustomerFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -71,9 +85,9 @@ public class CustomerFrame extends JFrame {
 		textField.setBounds(444, 28, 665, 36);
 		menupane.add(textField);
 		
-		table = new JTable();
-		table.setBounds(65, 76, 1044, 380);
-		menupane.add(table);
+		menuTable = new JTable();
+		menuTable.setBounds(65, 76, 1044, 380);
+		menupane.add(menuTable);
 		
 		JLabel lblSearch_1_2 = new JLabel("Search");
 		lblSearch_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -105,19 +119,19 @@ public class CustomerFrame extends JFrame {
 		tabbedPane.addTab("Order", null, orderpane, null);
 		orderpane.setLayout(null);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(438, 28, 665, 36);
-		orderpane.add(textField_1);
+		searchMenuField = new JTextField();
+		searchMenuField.setColumns(10);
+		searchMenuField.setBounds(438, 28, 665, 36);
+		orderpane.add(searchMenuField);
 		
 		JLabel lblSearch_1 = new JLabel("Search");
 		lblSearch_1.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblSearch_1.setBounds(300, 20, 128, 45);
 		orderpane.add(lblSearch_1);
 		
-		table_1 = new JTable();
-		table_1.setBounds(59, 76, 1044, 380);
-		orderpane.add(table_1);
+		orderTable = new JTable();
+		orderTable.setBounds(59, 76, 1044, 380);
+		orderpane.add(orderTable);
 		
 		JButton btnConfirmOrder = new JButton("Confirm Order");
 		btnConfirmOrder.setFont(new Font("SansSerif", Font.BOLD, 15));
@@ -159,9 +173,9 @@ public class CustomerFrame extends JFrame {
 		textField_2.setBounds(455, 32, 665, 36);
 		paymentpane.add(textField_2);
 		
-		table_2 = new JTable();
-		table_2.setBounds(76, 80, 1044, 380);
-		paymentpane.add(table_2);
+		paymentHistoryTable = new JTable();
+		paymentHistoryTable.setBounds(76, 80, 1044, 380);
+		paymentpane.add(paymentHistoryTable);
 		
 		JButton btnLogout_1_4_2 = new JButton("Logout");
 		btnLogout_1_4_2.addActionListener(new ActionListener() {
@@ -252,12 +266,60 @@ public class CustomerFrame extends JFrame {
 		btnLogout_1_4_3.setFont(new Font("SansSerif", Font.BOLD, 10));
 		btnLogout_1_4_3.setBounds(1079, 480, 90, 36);
 		profilepane.add(btnLogout_1_4_3);
+		
+		
+		String [] menuColumnNames = {"Menu ID", "Menu Name", "Price", "CategoryName"};
+		menuTableModel = new DefaultTableModel(menuColumnNames, 0);
+		menuTable.setModel(menuTableModel);
+		
+		TableRowSorter<DefaultTableModel> menuSorter = new TableRowSorter<>(menuTableModel);
+		menuTable.setRowSorter(menuSorter);
+		
+		searchMenuField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+			@Override
+			public void insertUpdate(javax.swing.event.DocumentEvent e) {
+				String searchText = searchMenuField.getText().toLowerCase();
+				if (searchText.trim().isEmpty()) {
+					LoadMenuTable(); 
+					
+				} else {
+					menuSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+				}
+			}
 
+			@Override
+			public void removeUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(javax.swing.event.DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+
+		LoadMenuTable();
 	}
 
 	public void setUserId(int userId) {
 		 this.userId = userId;
 		
 	}
+	
+	 public void LoadMenuTable() {
+		 menuList.clear();
+		 
+		 menuTableModel.setRowCount(0);
+		 
+		 menuList = MenuService.getInstance().getAllMenuItems();
+		 
+		 for (MenuItemModel menu : menuList) {
+			 Object[] row = {menu.getMenuItemId(), menu.getMenuItemName(), menu.getMenuprice(), menu.getCategorName()};
+			 menuTableModel.addRow(row);
+		 }
+		 
+		
+	 }
+
 
 }
