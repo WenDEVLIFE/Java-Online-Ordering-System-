@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import database.CategoryService;
+import database.StatisticService;
 import dialog.AddCategory;
 import dialog.AddCategoryDialog;
 import model.CategoryModel;
@@ -40,6 +41,13 @@ public class ResturantOwnerFrame extends JFrame {
 	private JTextField textField_2;
 	private JTable riderTable;
 	private JTextField textField_3;
+	private JLabel riderCount;
+	private JLabel categoryCount;
+	private JLabel menuCount;
+	private JLabel pendingOrderCount;
+	private JLabel totalOrderCount;
+	private JLabel activeRiderCount;
+	
 	DefaultTableModel categoryTableModel, menuTableModel, orderTableModel, riderTableModel;
 	List<CategoryModel> categoryList = new java.util.ArrayList<>();
 	List<MenuItemModel> menuList = new java.util.ArrayList<>();
@@ -99,10 +107,10 @@ public class ResturantOwnerFrame extends JFrame {
 		lblRiders_1.setBounds(113, 40, 128, 45);
 		panel_2.add(lblRiders_1);
 		
-		JLabel lblNewLabel_1_2 = new JLabel("0");
-		lblNewLabel_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_2.setBounds(127, 101, 128, 45);
-		panel_2.add(lblNewLabel_1_2);
+		riderCount = new JLabel("0");
+		riderCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		riderCount.setBounds(127, 101, 128, 45);
+		panel_2.add(riderCount);
 		
 		JPanel panel_1_2 = new JPanel();
 		panel_1_2.setLayout(null);
@@ -114,10 +122,10 @@ public class ResturantOwnerFrame extends JFrame {
 		lblCategories_1.setBounds(89, 39, 128, 45);
 		panel_1_2.add(lblCategories_1);
 		
-		JLabel lblNewLabel_1_1_2 = new JLabel("0");
-		lblNewLabel_1_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_2.setBounds(127, 101, 128, 45);
-		panel_1_2.add(lblNewLabel_1_1_2);
+		categoryCount = new JLabel("0");
+		categoryCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		categoryCount.setBounds(127, 101, 128, 45);
+		panel_1_2.add(categoryCount);
 		
 		JPanel panel_1_1_2 = new JPanel();
 		panel_1_1_2.setLayout(null);
@@ -129,10 +137,10 @@ public class ResturantOwnerFrame extends JFrame {
 		lblMenu_1.setBounds(116, 39, 128, 45);
 		panel_1_1_2.add(lblMenu_1);
 		
-		JLabel lblNewLabel_1_1_1_2 = new JLabel("0");
-		lblNewLabel_1_1_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_1_2.setBounds(127, 101, 128, 45);
-		panel_1_1_2.add(lblNewLabel_1_1_1_2);
+		menuCount = new JLabel("0");
+		menuCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		menuCount.setBounds(127, 101, 128, 45);
+		panel_1_1_2.add(menuCount);
 		
 		JPanel panel_1_1_1_2_1 = new JPanel();
 		panel_1_1_1_2_1.setLayout(null);
@@ -144,10 +152,10 @@ public class ResturantOwnerFrame extends JFrame {
 		lblPendingOrders_1.setBounds(59, 45, 183, 45);
 		panel_1_1_1_2_1.add(lblPendingOrders_1);
 		
-		JLabel lblNewLabel_1_1_1_1_2_1 = new JLabel("0");
-		lblNewLabel_1_1_1_1_2_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_1_1_2_1.setBounds(127, 101, 128, 45);
-		panel_1_1_1_2_1.add(lblNewLabel_1_1_1_1_2_1);
+		pendingOrderCount = new JLabel("0");
+		pendingOrderCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		pendingOrderCount.setBounds(127, 101, 128, 45);
+		panel_1_1_1_2_1.add(pendingOrderCount);
 		
 		JPanel panel_1_1_1_3 = new JPanel();
 		panel_1_1_1_3.setLayout(null);
@@ -159,10 +167,10 @@ public class ResturantOwnerFrame extends JFrame {
 		lblTotalOrders_1.setBounds(72, 39, 128, 45);
 		panel_1_1_1_3.add(lblTotalOrders_1);
 		
-		JLabel lblNewLabel_1_1_1_1_3 = new JLabel("0");
-		lblNewLabel_1_1_1_1_3.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_1_1_3.setBounds(127, 101, 128, 45);
-		panel_1_1_1_3.add(lblNewLabel_1_1_1_1_3);
+		totalOrderCount = new JLabel("0");
+		totalOrderCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		totalOrderCount.setBounds(127, 101, 128, 45);
+		panel_1_1_1_3.add(totalOrderCount);
 		
 		JPanel panel_1_1_1_1_1 = new JPanel();
 		panel_1_1_1_1_1.setLayout(null);
@@ -174,10 +182,10 @@ public class ResturantOwnerFrame extends JFrame {
 		lblActiveRiders_1.setBounds(72, 39, 128, 45);
 		panel_1_1_1_1_1.add(lblActiveRiders_1);
 		
-		JLabel lblNewLabel_1_1_1_1_1_1 = new JLabel("0");
-		lblNewLabel_1_1_1_1_1_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_1_1_1_1_1.setBounds(127, 101, 128, 45);
-		panel_1_1_1_1_1.add(lblNewLabel_1_1_1_1_1_1);
+		activeRiderCount = new JLabel("0");
+		activeRiderCount.setFont(new Font("SansSerif", Font.BOLD, 20));
+		activeRiderCount.setBounds(127, 101, 128, 45);
+		panel_1_1_1_1_1.add(activeRiderCount);
 		
 		JButton btnLogout_1_4 = new JButton("Logout");
 		btnLogout_1_4.addActionListener(new ActionListener() {
@@ -234,6 +242,29 @@ public class ResturantOwnerFrame extends JFrame {
 		categorypane.add(btnAddCategory);
 		
 		JButton btnDeleteCategory = new JButton("Delete Category");
+		btnDeleteCategory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int  selectedRow = categoryTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Please select a category to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				CategoryModel selectedCategory = categoryList.get(selectedRow);
+				int confirm = JOptionPane.showConfirmDialog(ResturantOwnerFrame.this, "Are you sure you want to delete the category: " + selectedCategory.getCategoryName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					boolean isDeleted = CategoryService.getInstance().deleteCategory(selectedCategory.getCategoryId());
+					if (isDeleted) {
+						LoadCategoryTable();
+						JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Category deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Failed to delete category. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 		btnDeleteCategory.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnDeleteCategory.setBounds(636, 467, 262, 49);
 		categorypane.add(btnDeleteCategory);
@@ -401,6 +432,7 @@ public class ResturantOwnerFrame extends JFrame {
 		categoryTableModel = new DefaultTableModel(categoryColumnNames, 0);
 		categoryTable.setModel(categoryTableModel);
 		LoadCategoryTable();
+		 loadDashboard();
 	}
 
 	public void setUserId(int userId) {
@@ -422,5 +454,25 @@ public class ResturantOwnerFrame extends JFrame {
 			categoryTableModel.addRow(row);
 		}
 	}
+	
+	public void loadDashboard() {
+
+	   int orderCount = StatisticService.getInstance().getOrderCount();
+	   int pendingOrderCountValue = StatisticService.getInstance().getPendingOrders();
+	   int riderCountValue = StatisticService.getInstance().getTotalRiders();
+	   int menuItemCount = StatisticService.getInstance().getMenuItemCount();
+	   int categoryCountValue = StatisticService.getInstance().getCategoryCount();
+	   int activeRiderCountValue = StatisticService.getInstance().getAvailaleRiders();
+	   
+	   totalOrderCount.setText(String.valueOf(orderCount));
+	   pendingOrderCount.setText(String.valueOf(pendingOrderCountValue));
+	   riderCount.setText(String.valueOf(riderCountValue));
+	   menuCount.setText(String.valueOf(menuItemCount));
+	   categoryCount.setText(String.valueOf(categoryCountValue));
+	   activeRiderCount.setText(String.valueOf(activeRiderCountValue));
+	   
+		
+	}
+		
 
 }
