@@ -20,6 +20,7 @@ import dialog.AddCategoryDialog;
 import dialog.AddMenuDialog;
 import dialog.AddRider;
 import dialog.EditMenuDialog;
+import dialog.ViewRiderDialog;
 import model.CategoryModel;
 import model.MenuItemModel;
 import model.OrderModel;
@@ -507,6 +508,22 @@ public class ResturantOwnerFrame extends JFrame {
 		riderpane.add(btnAddRider);
 		
 		JButton btnUpdateRider = new JButton("View Rider");
+		btnUpdateRider.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = riderTable.getSelectedRow();
+				
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Please select a rider to view.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				RiderModel selectedRider = riderList.get(selectedRow);
+				String riderId = selectedRider.getRiderId();
+				int riderIdInt = Integer.parseInt(riderId);
+				ViewRiderDialog viewRiderDialog = new ViewRiderDialog(ResturantOwnerFrame.this, riderIdInt);
+				viewRiderDialog.setVisible(true);
+			}
+		});
 		btnUpdateRider.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnUpdateRider.setBounds(646, 467, 262, 49);
 		riderpane.add(btnUpdateRider);

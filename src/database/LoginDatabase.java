@@ -42,21 +42,21 @@ public class LoginDatabase {
 				int userId = rs.getInt("user_id");
 				
 				JOptionPane.showMessageDialog(login, "Login successful! Welcome " + username + "!", "Login Success", JOptionPane.INFORMATION_MESSAGE);
-				if ("admin".equals(role)) {
+				if ("Admin".equals(role)) {
 					// Assuming you have an AdminFrame class
 					AdminFrame adminFrame = new AdminFrame();
 					adminFrame.setVisible(true);
 					adminFrame.setUserId(userId); // Assuming you have a method to set user ID
 					login.dispose(); // Close the login frame
 					
-				} else if ("restaurant_admin".equals(role)) {
+				} else if ("RestaurantAdmin".equals(role)) {
 					// Assuming you have a RestaurantOwnerFrame class
 					ResturantOwnerFrame restaurantOwnerFrame = new ResturantOwnerFrame();
 					restaurantOwnerFrame.setVisible(true);
 					restaurantOwnerFrame.setUserId(userId); // Assuming you have a method to set user ID
 					login.dispose(); // Close the login frame
 					
-				} else if ("customer".equals(role)) {
+				} else if ("Customer".equals(role)) {
 					CustomerFrame customerFrame = new CustomerFrame();
 					customerFrame.setVisible(true);
 					customerFrame.setUserId(userId); // Assuming you have a method to set user ID

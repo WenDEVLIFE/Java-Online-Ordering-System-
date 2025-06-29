@@ -117,4 +117,55 @@ public class RiderService {
 		}
 		return -1; // Return -1 if not found
 	}
+
+	public RiderModel getRiderById(int riderId) {
+		String sql = "SELECT * FROM rider WHERE rider_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, riderId);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				String id = rs.getString("rider_id");
+				String name = rs.getString("rider_name");
+				String phoneNumber = rs.getString("rider_phone_number");
+				String status = rs.getString("rider_status");
+				return new RiderModel(id, name, phoneNumber, status);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void deleteRider(int riderId) {
+		 String sql = "DELETE FROM rider WHERE rider_id = ?";
+		try (Connection conn = MYSQLInit.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, riderId);
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public List<String> getReviewsByRiderId(int riderId) {
+	    List<String> reviews = new ArrayList<>();
+	    String sql = "SELECT feedback, rate, date FROM riderlogs WHERE rider_id = ?";
+	    try (Connection conn = MYSQLInit.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setInt(1, riderId);
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            String feedback = rs.getString("feedback");
+	            int rate = rs.getInt("rate");
+	            String date = rs.getString("date");
+	            reviews.add("Rate: " + rate + " | Feedback: " + feedback + " | Date: " + date);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return reviews;
+	}
 }
