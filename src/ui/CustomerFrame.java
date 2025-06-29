@@ -12,6 +12,7 @@ import database.MenuService;
 import database.MyProfileService;
 import dialog.ChangePasswordDialog;
 import dialog.MyProfileDialog;
+import dialog.SelectItemDialog;
 import model.MenuItemModel;
 
 import javax.swing.JTabbedPane;
@@ -108,6 +109,23 @@ public class CustomerFrame extends JFrame {
 		menupane.add(lblSearch_1_2);
 		
 		JButton btnSelectItem = new JButton("Select Item");
+		btnSelectItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+		      int selectedRow = menuTable.getSelectedRow();
+		      if (selectedRow == -1) {
+		          JOptionPane.showMessageDialog(CustomerFrame.this, "Please select a menu item.", "No Selection", JOptionPane.WARNING_MESSAGE);
+		          return;
+		      }
+		      
+		      MenuItemModel selectedMenuItem = menuList.get(selectedRow);
+		      SelectItemDialog selectItemDialog = new SelectItemDialog(CustomerFrame.this, selectedMenuItem, userId);
+		      selectItemDialog.setVisible(true);
+		      if (selectItemDialog.isSelected()) {
+		          JOptionPane.showMessageDialog(CustomerFrame.this, "You selected " + selectItemDialog.getQuantity() + " of " + selectedMenuItem.getMenuItemName(), "Selected Item Added to the Order", JOptionPane.INFORMATION_MESSAGE);
+		      }
+			}
+		});
 		btnSelectItem.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnSelectItem.setBounds(405, 467, 262, 49);
 		menupane.add(btnSelectItem);
