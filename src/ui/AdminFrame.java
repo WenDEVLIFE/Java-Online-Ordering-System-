@@ -152,6 +152,22 @@ public class AdminFrame extends JFrame {
 		logCount.setBounds(136, 101, 128, 45);
 		panel_1_2.add(logCount);
 		
+		JButton btnLogout_1 = new JButton("Logout");
+		btnLogout_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int confirm = JOptionPane.showConfirmDialog(AdminFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+			}
+		});
+		btnLogout_1.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_1.setBounds(1079, 485, 90, 36);
+		dashboardPanel.add(btnLogout_1);
+		
 		JPanel accoountpanel = new JPanel();
 		accoountpanel.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Account Management", null, accoountpanel, null);
@@ -184,7 +200,7 @@ public class AdminFrame extends JFrame {
 			}
 		});
 		btnAddAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
-		btnAddAccount.setBounds(111, 475, 262, 49);
+		btnAddAccount.setBounds(126, 475, 262, 49);
 		accoountpanel.add(btnAddAccount);
 		
 		JButton btnEditAccount = new JButton("Edit Account");
@@ -310,12 +326,63 @@ public class AdminFrame extends JFrame {
 		btnChangePassword.setBounds(367, 346, 262, 49);
 		updatePanel.add(btnChangePassword);
 		
+		JButton btnLogout_3 = new JButton("Logout");
+		btnLogout_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int confirm = JOptionPane.showConfirmDialog(AdminFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+				
+			}
+		});
+		btnLogout_3.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_3.setBounds(1079, 485, 90, 36);
+		updatePanel.add(btnLogout_3);
+		
 		String [] columnNames = {"Username", "Role"};
 		String [] logColumnNames = {"Log ID", "Description", "Timestamp"};
 		accountTableModel = new DefaultTableModel(columnNames, 0);
 		LogTableModel = new DefaultTableModel(logColumnNames, 0);
 		AccountTable.setModel(accountTableModel);
+		
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int confirm = JOptionPane.showConfirmDialog(AdminFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+				
+			}
+		});
+		btnLogout.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout.setBounds(1079, 483, 90, 36);
+		accoountpanel.add(btnLogout);
 		table_1.setModel(LogTableModel);
+		
+		JButton btnLogout_2 = new JButton("Logout");
+		btnLogout_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int confirm = JOptionPane.showConfirmDialog(AdminFrame.this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					LoginFrame loginFrame = new LoginFrame();
+					loginFrame.setVisible(true);
+				}
+				
+			}
+		});
+		btnLogout_2.setFont(new Font("SansSerif", Font.BOLD, 10));
+		btnLogout_2.setBounds(1079, 485, 90, 36);
+		logpanel.add(btnLogout_2);
 		
 		refreshAccountTable();
 		refreshLogTable();
