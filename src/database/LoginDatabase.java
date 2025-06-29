@@ -46,12 +46,14 @@ public class LoginDatabase {
 					// Assuming you have an AdminFrame class
 					AdminFrame adminFrame = new AdminFrame();
 					adminFrame.setVisible(true);
+					adminFrame.setUserId(userId); // Assuming you have a method to set user ID
 					login.dispose(); // Close the login frame
 					
 				} else if ("restaurant_admin".equals(role)) {
 					// Assuming you have a RestaurantOwnerFrame class
 					ResturantOwnerFrame restaurantOwnerFrame = new ResturantOwnerFrame();
 					restaurantOwnerFrame.setVisible(true);
+					restaurantOwnerFrame.setUserId(userId); // Assuming you have a method to set user ID
 					login.dispose(); // Close the login frame
 					
 				} else if ("customer".equals(role)) {

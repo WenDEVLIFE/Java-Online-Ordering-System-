@@ -6,6 +6,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import database.CategoryService;
+import dialog.AddCategory;
+import dialog.AddCategoryDialog;
+import model.CategoryModel;
+import model.MenuItemModel;
+import model.OrderModel;
+import model.RiderModel;
+
 import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class ResturantOwnerFrame extends JFrame {
@@ -22,13 +33,19 @@ public class ResturantOwnerFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
-	private JTable table;
-	private JTable table_1;
+	private JTable categoryTable;
+	private JTable menuTable;
 	private JTextField textField_1;
-	private JTable table_2;
+	private JTable orderTable;
 	private JTextField textField_2;
-	private JTable table_3;
+	private JTable riderTable;
 	private JTextField textField_3;
+	DefaultTableModel categoryTableModel, menuTableModel, orderTableModel, riderTableModel;
+	List<CategoryModel> categoryList = new java.util.ArrayList<>();
+	List<MenuItemModel> menuList = new java.util.ArrayList<>();
+	List<OrderModel> orderList = new java.util.ArrayList<>();
+	List<RiderModel> riderList = new java.util.ArrayList<>();
+	private int userId;
 
 	/**
 	 * Launch the application.
@@ -187,9 +204,9 @@ public class ResturantOwnerFrame extends JFrame {
 		textField.setBounds(447, 28, 665, 36);
 		categorypane.add(textField);
 		
-		table = new JTable();
-		table.setBounds(68, 76, 1044, 380);
-		categorypane.add(table);
+		categoryTable = new JTable();
+		categoryTable.setBounds(68, 76, 1044, 380);
+		categorypane.add(categoryTable);
 		
 		JLabel lblSearch_1 = new JLabel("Search");
 		lblSearch_1.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -197,6 +214,19 @@ public class ResturantOwnerFrame extends JFrame {
 		categorypane.add(lblSearch_1);
 		
 		JButton btnAddCategory = new JButton("Add Category");
+		btnAddCategory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddCategory addCategoryDialog = new AddCategory(ResturantOwnerFrame.this);
+				addCategoryDialog.setVisible(true);
+				if (AddCategory.isCategoryAdded()) {
+					LoadCategoryTable();
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Category added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Failed to add category. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				 
+			}
+		});
 		btnAddCategory.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnAddCategory.setBounds(226, 467, 262, 49);
 		categorypane.add(btnAddCategory);
@@ -227,9 +257,9 @@ public class ResturantOwnerFrame extends JFrame {
 		tabbedPane.addTab("Menu", null, menupane, null);
 		menupane.setLayout(null);
 		
-		table_1 = new JTable();
-		table_1.setBounds(60, 76, 1044, 380);
-		menupane.add(table_1);
+		menuTable = new JTable();
+		menuTable.setBounds(60, 76, 1044, 380);
+		menupane.add(menuTable);
 		
 		JButton btnAddMenu = new JButton("Add Menu");
 		btnAddMenu.setFont(new Font("SansSerif", Font.BOLD, 15));
@@ -276,9 +306,9 @@ public class ResturantOwnerFrame extends JFrame {
 		tabbedPane.addTab("Orders", null, orderpane, null);
 		orderpane.setLayout(null);
 		
-		table_2 = new JTable();
-		table_2.setBounds(71, 67, 1044, 380);
-		orderpane.add(table_2);
+		orderTable = new JTable();
+		orderTable.setBounds(71, 67, 1044, 380);
+		orderpane.add(orderTable);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
@@ -320,9 +350,9 @@ public class ResturantOwnerFrame extends JFrame {
 		tabbedPane.addTab("Rider", null, riderpane, null);
 		riderpane.setLayout(null);
 		
-		table_3 = new JTable();
-		table_3.setBounds(60, 76, 1044, 380);
-		riderpane.add(table_3);
+		riderTable = new JTable();
+		riderTable.setBounds(60, 76, 1044, 380);
+		riderpane.add(riderTable);
 		
 		textField_3 = new JTextField();
 		textField_3.setColumns(10);
@@ -359,6 +389,33 @@ public class ResturantOwnerFrame extends JFrame {
 		btnLogout_1.setBounds(1079, 482, 90, 36);
 		riderpane.add(btnLogout_1);
 
+		
+		String [] categoryColumnNames = {"Category ID", "Category Name"};
+		String [] menuColumnNames = {"Menu ID", "Menu Name", "Price", "CategoryName"};
+		String [] orderColumnNames = {"Order ID", "Customer Name", "Menu Item", "Menu Price", "Total Amount", "Quantity", "Order Status", "Rider Name"};
+		categoryTableModel = new DefaultTableModel(categoryColumnNames, 0);
+		categoryTable.setModel(categoryTableModel);
+		LoadCategoryTable();
+	}
+
+	public void setUserId(int userId) {
+		// TODO Auto-generated method stub
+		
+		this.userId = userId;
+	
+	}
+	
+	public void LoadCategoryTable() {
+		categoryList.clear();
+		
+		categoryTableModel.setRowCount(0);
+		
+		categoryList = CategoryService.getInstance().getAllCategories();
+		
+		for (CategoryModel category : categoryList) {
+			Object[] row = {category.getCategoryId(), category.getCategoryName()};
+			categoryTableModel.addRow(row);
+		}
 	}
 
 }
