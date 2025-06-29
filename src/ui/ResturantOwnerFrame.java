@@ -9,9 +9,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import database.CategoryService;
+import database.RiderService;
 import database.StatisticService;
 import dialog.AddCategory;
 import dialog.AddCategoryDialog;
+import dialog.AddRider;
 import model.CategoryModel;
 import model.MenuItemModel;
 import model.OrderModel;
@@ -401,6 +403,17 @@ public class ResturantOwnerFrame extends JFrame {
 		riderpane.add(lblSearch_1_2);
 		
 		JButton btnAddRider = new JButton("Add Rider");
+		btnAddRider.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddRider addRiderDialog = new AddRider(ResturantOwnerFrame.this);
+				addRiderDialog.setVisible(true);
+				if (AddRider.isRiderAdded()) {
+					JOptionPane.showMessageDialog(ResturantOwnerFrame.this, "Rider added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					loadDashboard();
+					LoadRiderTable();
+				} 
+			}
+		});
 		btnAddRider.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnAddRider.setBounds(164, 467, 262, 49);
 		riderpane.add(btnAddRider);
@@ -429,10 +442,18 @@ public class ResturantOwnerFrame extends JFrame {
 		String [] categoryColumnNames = {"Category ID", "Category Name"};
 		String [] menuColumnNames = {"Menu ID", "Menu Name", "Price", "CategoryName"};
 		String [] orderColumnNames = {"Order ID", "Customer Name", "Menu Item", "Menu Price", "Total Amount", "Quantity", "Order Status", "Rider Name"};
+		String [] riderColumnNames = {"Rider ID", "Rider Name", "Phone Number", "Status"};
 		categoryTableModel = new DefaultTableModel(categoryColumnNames, 0);
 		categoryTable.setModel(categoryTableModel);
+		menuTableModel = new DefaultTableModel(menuColumnNames, 0);
+		menuTable.setModel(menuTableModel);
+		orderTableModel = new DefaultTableModel(orderColumnNames, 0);
+		orderTable.setModel(orderTableModel);
+		riderTableModel = new DefaultTableModel(riderColumnNames, 0);
+		riderTable.setModel(riderTableModel);
 		LoadCategoryTable();
 		 loadDashboard();
+		 LoadRiderTable();
 	}
 
 	public void setUserId(int userId) {
@@ -472,6 +493,19 @@ public class ResturantOwnerFrame extends JFrame {
 	   activeRiderCount.setText(String.valueOf(activeRiderCountValue));
 	   
 		
+	}
+	
+	public void LoadRiderTable() {
+		riderList.clear();
+		
+		riderTableModel.setRowCount(0);
+		
+		riderList = RiderService.getInstance().getAllRiders();
+		
+		for (RiderModel rider : riderList) {
+			Object[] row = {rider.getRiderId(), rider.getRiderName(), rider.getRiderPhoneNumber(), rider.getStatus()};
+			riderTableModel.addRow(row);
+		}
 	}
 		
 

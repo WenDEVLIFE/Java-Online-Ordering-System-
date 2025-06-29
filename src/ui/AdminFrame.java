@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import database.AccountService;
 import database.LogService;
@@ -23,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
@@ -35,7 +37,7 @@ public class AdminFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable AccountTable;
-	private JTextField textField;
+	private JTextField searchUserFIeld;
 	private JTable table_1;
 	private JPasswordField newPasswordField;
 	private JPasswordField oldPasswordField;
@@ -177,10 +179,10 @@ public class AdminFrame extends JFrame {
 		AccountTable.setBounds(66, 84, 1044, 380);
 		accoountpanel.add(AccountTable);
 		
-		textField = new JTextField();
-		textField.setBounds(445, 36, 665, 36);
-		accoountpanel.add(textField);
-		textField.setColumns(10);
+		searchUserFIeld = new JTextField();
+		searchUserFIeld.setBounds(445, 36, 665, 36);
+		accoountpanel.add(searchUserFIeld);
+		searchUserFIeld.setColumns(10);
 		
 		JLabel lblSearch = new JLabel("Search");
 		lblSearch.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -348,6 +350,31 @@ public class AdminFrame extends JFrame {
 		accountTableModel = new DefaultTableModel(columnNames, 0);
 		LogTableModel = new DefaultTableModel(logColumnNames, 0);
 		AccountTable.setModel(accountTableModel);
+		
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(accountTableModel);
+		AccountTable.setRowSorter(sorter);
+		
+		searchUserFIeld.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) {
+		        filter();
+		    }
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) {
+		        filter();
+		    }
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) {
+		        filter();
+		    }
+		    private void filter() {
+		        String searchText = searchUserFIeld.getText().trim();
+		        if (searchText.isEmpty()) {
+		            sorter.setRowFilter(null);
+		        } else {
+		            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+		        }
+		    }
+		});
+
+		
 		
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.addActionListener(new ActionListener() {

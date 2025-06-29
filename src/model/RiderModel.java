@@ -6,11 +6,15 @@ public class RiderModel {
 	
 	String riderName;
 	
+	String riderPhoneNumber;
+	
 	String Status;
 	
-	public RiderModel(String riderId, String riderName, String status) {
+	public RiderModel(String riderId, String riderName, String riderPhoneNumber, String status) {
+		super();
 		this.riderId = riderId;
 		this.riderName = riderName;
+		this.riderPhoneNumber = riderPhoneNumber;
 		Status = status;
 	}
 	
@@ -18,30 +22,19 @@ public class RiderModel {
 		return riderId;
 	}
 	
-	public void setRiderId(String riderId) {
-		this.riderId = riderId;
-	}
-	
 	public String getRiderName() {
 		return riderName;
 	}
 	
-	public void setRiderName(String riderName) {
-		this.riderName = riderName;
-	}
 	
+	public String getRiderPhoneNumber() {
+		return riderPhoneNumber;
+	}
+		
 	public String getStatus() {
 		return Status;
 	}
-	
-	public void setStatus(String status) {
-		Status = status;
-	}
-	
-	@Override
-	public String toString() {
-		return "RiderModel [riderId=" + riderId + ", riderName=" + riderName + ", Status=" + Status + "]";
-	}
-	
+		
+		
 
 }
