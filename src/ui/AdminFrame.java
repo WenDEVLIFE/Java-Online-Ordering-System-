@@ -10,11 +10,20 @@ import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JPasswordField;
 
 public class AdminFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JTable table;
+	private JTextField textField;
+	private JTable table_1;
+	private JPasswordField newPasswordField;
+	private JPasswordField oldPasswordField;
 
 	/**
 	 * Launch the application.
@@ -122,14 +131,83 @@ public class AdminFrame extends JFrame {
 		JPanel accoountpanel = new JPanel();
 		accoountpanel.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Account Management", null, accoountpanel, null);
+		accoountpanel.setLayout(null);
+		
+		table = new JTable();
+		table.setBounds(66, 84, 1044, 380);
+		accoountpanel.add(table);
+		
+		textField = new JTextField();
+		textField.setBounds(445, 36, 665, 36);
+		accoountpanel.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblSearch = new JLabel("Search");
+		lblSearch.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblSearch.setBounds(307, 28, 128, 45);
+		accoountpanel.add(lblSearch);
+		
+		JButton btnAddAccount = new JButton("Add Account");
+		btnAddAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnAddAccount.setBounds(111, 475, 262, 49);
+		accoountpanel.add(btnAddAccount);
+		
+		JButton btnEditAccount = new JButton("Edit Account");
+		btnEditAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnEditAccount.setBounds(430, 475, 262, 49);
+		accoountpanel.add(btnEditAccount);
+		
+		JButton btnDeleteAccount = new JButton("Delete Account");
+		btnDeleteAccount.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnDeleteAccount.setBounds(734, 475, 262, 49);
+		accoountpanel.add(btnDeleteAccount);
 		
 		JPanel logpanel = new JPanel();
 		logpanel.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Logs", null, logpanel, null);
+		logpanel.setLayout(null);
+		
+		table_1 = new JTable();
+		table_1.setBounds(62, 86, 1044, 380);
+		logpanel.add(table_1);
+		
+		JLabel lblLogs_1 = new JLabel("Logs");
+		lblLogs_1.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblLogs_1.setBounds(62, 27, 128, 45);
+		logpanel.add(lblLogs_1);
 		
 		JPanel updatePanel = new JPanel();
 		updatePanel.setBackground(new Color(255, 128, 64));
 		tabbedPane.addTab("Update My Password", null, updatePanel, null);
+		updatePanel.setLayout(null);
+		
+		JLabel lblUpdatePassword = new JLabel("Update Password");
+		lblUpdatePassword.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblUpdatePassword.setBounds(82, 22, 217, 45);
+		updatePanel.add(lblUpdatePassword);
+		
+		JLabel lblOldPassword = new JLabel("Old Password");
+		lblOldPassword.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblOldPassword.setBounds(134, 129, 150, 45);
+		updatePanel.add(lblOldPassword);
+		
+		JLabel lblNewPassword = new JLabel("New Password");
+		lblNewPassword.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblNewPassword.setBounds(134, 214, 150, 45);
+		updatePanel.add(lblNewPassword);
+		
+		newPasswordField = new JPasswordField();
+		newPasswordField.setBounds(322, 216, 389, 43);
+		updatePanel.add(newPasswordField);
+		
+		oldPasswordField = new JPasswordField();
+		oldPasswordField.setBounds(322, 129, 389, 43);
+		updatePanel.add(oldPasswordField);
+		
+		JButton btnChangePassword = new JButton("Change Password");
+		btnChangePassword.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnChangePassword.setBounds(367, 346, 262, 49);
+		updatePanel.add(btnChangePassword);
 
 	}
 }
